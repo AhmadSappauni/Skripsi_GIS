@@ -1,0 +1,13 @@
+/* ===== CORE (AMAN GLOBAL) ===== */
+@import url('./admin/base.css');
+@import url('./admin/buttons.css');
+@import url('./admin/icons.css');
+
+/* ===== PAGE: DASHBOARD / INDEX ===== */
+@import url('./admin/dashboard.css');
+@import url('./admin/table.css');
+
+/* ===== PAGE: CREATE / EDIT ===== */
+@import url('./admin/form.css');
+@import url('./admin/category.css');
+@import url('./admin/wizard.css');

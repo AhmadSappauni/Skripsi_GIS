@@ -1,0 +1,71 @@
+/* ===============================
+   CATEGORY GRID (FIXED & SAFE)
+   =============================== */
+
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 14px;
+}
+
+/* Hide native radio */
+.cat-input {
+    display: none;
+}
+
+/* Card */
+.cat-box {
+    height: 120px;
+    padding: 12px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    transition: all 0.25s ease;
+    overflow: hidden; /* 🔴 INI KUNCI */
+}
+
+/* Hover */
+.cat-box:hover {
+    border-color: var(--primary);
+    background: #f8fafc;
+    transform: translateY(-2px);
+}
+
+/* Checked */
+.cat-input:checked + .cat-box {
+    background: #e0e7ff;
+    border-color: var(--primary);
+    box-shadow: 0 6px 18px rgba(99,102,241,.25);
+}
+
+/* ICON — FIX UTAMA */
+.cat-icon {
+    width: 44px;
+    height: 44px;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;   /* 🔴 PENTING */
+    margin-bottom: 6px;
+    pointer-events: none;
+}
+
+/* Label */
+.cat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dark);
+    line-height: 1.2;
+}
+.cat-icon {
+    background: #f1f5f9;
+    border-radius: 50%;
+    padding: 6px;
+}

@@ -1,0 +1,17 @@
+.page-index .table-container {
+    background: white;
+    border-radius: 24px;
+    padding: 5px;
+    box-shadow: var(--card-shadow);
+}
+
+.page-index .table-modern {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.page-index .table-modern th {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
