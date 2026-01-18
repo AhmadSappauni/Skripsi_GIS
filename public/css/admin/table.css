@@ -1,17 +1,100 @@
+/* --- TABLE MODERN CLEAN --- */
 .page-index .table-container {
     background: white;
     border-radius: 24px;
-    padding: 5px;
-    box-shadow: var(--card-shadow);
+    padding: 0; /* Hilangkan padding container */
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+    border: 1px solid #f1f5f9;
+    overflow: hidden; /* Agar sudut tumpul tabel terlihat */
 }
 
 .page-index .table-modern {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate; /* Penting untuk border-radius */
+    border-spacing: 0;
 }
 
 .page-index .table-modern th {
+    background: #f8fafc;
+    padding: 18px 24px;
     font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #64748b;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.page-index .table-modern td {
+    padding: 20px 24px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+    background: white;
+    transition: background 0.2s;
+}
+
+.page-index .table-modern tr:last-child td {
+    border-bottom: none;
+}
+
+.page-index .table-modern tr:hover td {
+    background: #fcfaff; /* Highlight ungu sangat tipis saat hover */
+}
+
+.page-index .table-modern thead th {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.page-index .table-modern tbody tr {
+    transition: background 0.2s ease;
+}
+
+.page-index .table-modern tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+
+/* Styling Nama Tempat yang lebih menonjol */
+.table-modern td div[style*="font-weight: 700"] {
+    font-size: 15px !important;
+    color: #0f172a !important; /* Warna text lebih gelap */
+}
+
+/* Badge Kategori */
+.badge {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.badge.primary { 
+    background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe; 
+}
+.badge.success { 
+    background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;
+}
+
+.badge.neutral {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.badge.muted {
+    background: #f1f5f9;
     color: #94a3b8;
+}
+
+
+.table-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #f1f5f9;
 }

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('latitude', 10, 8); 
             $table->decimal('longitude', 11, 8);
             $table->integer('harga_tiket'); // Penting untuk Greedy
-            $table->enum('kategori', ['Alam', 'Religi', 'Kuliner', 'Belanja']);
+            $table->string('kategori');
             $table->string('gambar')->nullable(); // URL atau path gambar
             $table->timestamps();
         });

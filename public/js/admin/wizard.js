@@ -1,72 +1,173 @@
-// public/js/admin/wizard.js
+document.addEventListener("DOMContentLoaded", function() {
+    
+    let currentStep = 0;
+    const contents = document.querySelectorAll('.wizard-content');
+    const indicators = document.querySelectorAll('.step-item'); 
+    
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
 
-let step = 0;
+    const namaInput = document.getElementById('namaTempat');
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
 
-const steps = document.querySelectorAll('.wizard-content');
-const indicators = document.querySelectorAll('.step');
-const nextBtn = document.getElementById('nextBtn');
-const prevBtn = document.getElementById('prevBtn');
-const submitBtn = document.getElementById('submitBtn');
+    // --- LOGIKA CUSTOM MODAL (FUTURISTIK) ---
+    const modal = document.getElementById('customModal');
+    const mIcon = document.getElementById('modalIcon');
+    const mTitle = document.getElementById('modalTitle');
+    const mDesc = document.getElementById('modalDesc');
+    const mActions = document.getElementById('modalActions');
 
-const latitude = document.getElementById('latitude');
-const longitude = document.getElementById('longitude');
+    function showModal(type, title, message, onConfirm = null) {
+        // 1. Setup Icon & Warna
+        mIcon.className = 'modal-icon-box'; // Reset class
+        if (type === 'error') {
+            mIcon.classList.add('icon-warning');
+            mIcon.innerHTML = '<i class="ri-error-warning-line"></i>';
+        } else if (type === 'confirm') {
+            mIcon.classList.add('icon-question');
+            mIcon.innerHTML = '<i class="ri-question-line"></i>';
+        }
 
-function isStepValid(stepIndex) {
-    if (stepIndex === 0) {
-        const nama = document.getElementById('namaTempat').value;
-        const kategori = document.querySelector('input[name="kategori"]:checked');
-        return nama.trim() !== '' && kategori;
+        // 2. Isi Teks
+        mTitle.innerText = title;
+        mDesc.innerText = message;
+
+        // 3. Setup Tombol
+        mActions.innerHTML = ''; // Kosongkan tombol lama
+
+        if (type === 'error') {
+            // Tombol Tunggal (Oke)
+            const btn = document.createElement('button');
+            btn.className = 'btn-modal btn-primary-modal';
+            btn.innerText = 'Oke, Saya Perbaiki';
+            btn.onclick = closeModal;
+            mActions.appendChild(btn);
+        } else if (type === 'confirm') {
+            // Tombol Ganda (Batal & Ya)
+            const btnCancel = document.createElement('button');
+            btnCancel.className = 'btn-modal btn-secondary-modal';
+            btnCancel.innerText = 'Batal';
+            btnCancel.onclick = closeModal;
+
+            const btnConfirm = document.createElement('button');
+            btnConfirm.className = 'btn-modal btn-primary-modal';
+            btnConfirm.innerText = 'Ya, Simpan!';
+            btnConfirm.onclick = () => {
+                closeModal();
+                if (onConfirm) onConfirm();
+            };
+
+            mActions.appendChild(btnCancel);
+            mActions.appendChild(btnConfirm);
+        }
+
+        // 4. Tampilkan dengan Animasi
+        modal.classList.add('open');
     }
 
-    if (stepIndex === 2) {
-        return latitude.value && longitude.value && jamOperasional.value;
+    function closeModal() {
+        modal.classList.remove('open');
     }
 
-    return true;
-}
+    // Tutup modal jika klik di luar area kartu
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
 
-function showStep(i) {
-    steps.forEach(s => s.classList.remove('active'));
-    indicators.forEach(s => s.classList.remove('active'));
+    // --- WIZARD LOGIC ---
+    function updateWizard() {
+        contents.forEach((content, index) => {
+            if (index === currentStep) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
+        });
 
-    steps[i].classList.add('active');
-    indicators[i].classList.add('active');
+        indicators.forEach((step, index) => {
+            step.classList.remove('active', 'completed');
+            if (index === currentStep) {
+                step.classList.add('active');
+            } else if (index < currentStep) {
+                step.classList.add('completed');
+            }
+        });
 
-    prevBtn.style.display = i === 0 ? 'none' : 'inline-flex';
+        if (currentStep === 0) {
+            prevBtn.style.display = 'none';
+        } else {
+            prevBtn.style.display = 'inline-flex';
+        }
 
-    if (i === steps.length - 1) {
-        nextBtn.style.display = 'none';
-        submitBtn.style.display = 'inline-flex';
-    } else {
-        nextBtn.style.display = 'inline-flex';
-        submitBtn.style.display = 'none';
+        if (currentStep === contents.length - 1) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-flex';
+            if (typeof window.updatePreview === 'function') window.updatePreview();
+        } else {
+            nextBtn.style.display = 'inline-flex';
+            submitBtn.style.display = 'none';
+        }
+
+        if (currentStep === 2 && window.map) {
+            setTimeout(() => {
+                window.map.invalidateSize();
+                if(latInput.value && lngInput.value) {
+                    window.map.setView([latInput.value, lngInput.value], 15);
+                }
+            }, 500);
+        }
     }
 
-    document.getElementById('progressBar').style.width =
-        ((i + 1) / steps.length * 100) + '%';
-
-    // FIX MAP RENDER
-    if (i === 2 && window.map) {
-        setTimeout(() => {
-            map.invalidateSize();
-            map.setView(
-                [latitude.value || -2.5489, longitude.value || 118.0149],
-                6
-            );
-        }, 300);
+    function isStepValid() {
+        if (currentStep === 0) {
+            const nama = namaInput.value.trim();
+            const kategori = document.querySelector('input[name="kategori"]:checked');
+            
+            if (!nama) {
+                // PANGGIL MODAL CUSTOM KITA
+                showModal('error', 'Nama Masih Kosong', 'Mohon isi nama tempat wisata terlebih dahulu sebelum melanjutkan.');
+                return false;
+            }
+            if (!kategori) {
+                showModal('error', 'Kategori Belum Dipilih', 'Pilihlah salah satu kategori yang paling sesuai dengan wisata ini.');
+                return false;
+            }
+        }
+        
+        if (currentStep === 2) {
+            if(!latInput.value || !lngInput.value) {
+                showModal('error', 'Lokasi Belum Ditandai', 'Klik pada peta atau gunakan tombol cari untuk menandai lokasi wisata.');
+                return false;
+            }
+        }
+        return true;
     }
-}
 
-nextBtn.onclick = () => {
-    if (!isStepValid(step)) return;
-    step++;
-    showStep(step);
-    if (step === steps.length - 1) updatePreview();
-};
+    nextBtn.addEventListener('click', function() {
+        if (isStepValid()) {
+            if (currentStep < contents.length - 1) {
+                currentStep++;
+                updateWizard();
+            }
+        }
+    });
 
-prevBtn.onclick = () => {
-    step--;
-    showStep(step);
-};
+    prevBtn.addEventListener('click', function() {
+        if (currentStep > 0) {
+            currentStep--;
+            updateWizard();
+        }
+    });
 
-showStep(step);
+    // KONFIRMASI SIMPAN
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        showModal('confirm', 'Simpan Data?', 'Pastikan semua informasi sudah benar sebelum disimpan ke database.', () => {
+            document.querySelector('form').submit();
+        });
+    });
+
+    updateWizard();
+});

@@ -1,29 +1,56 @@
-// public/js/admin/preview.js
-
 window.updatePreview = function () {
+    
+    // 1. AMBIL DATA
+    const nama = document.getElementById('namaTempat')?.value.trim();
+    const hargaVal = document.getElementById('hargaTiket')?.value;
+    const alamat = document.getElementById('alamatInp')?.value.trim();
+    const kategoriEl = document.querySelector('input[name="kategori"]:checked');
+    const kategori = kategoriEl ? kategoriEl.value : '';
 
-    document.getElementById('pvNama').innerText =
-        document.getElementById('namaTempat')?.value || '-';
+    // Ambil Data Jam
+    const is24Jam = document.getElementById('is24Jam')?.checked;
+    const jamBuka = document.getElementById('jamBuka')?.value;
+    const jamTutup = document.getElementById('jamTutup')?.value;
+    
+    // Logic Format Jam
+    let jamText = '-';
+    if (is24Jam) {
+        jamText = 'Buka 24 Jam';
+    } else if (jamBuka && jamTutup) {
+        jamText = `${jamBuka} - ${jamTutup} WITA`;
+    }
 
-    const kategori = document.querySelector('input[name="kategori"]:checked');
-    document.getElementById('pvKategori').innerText =
-        kategori ? kategori.value : '-';
+    // 2. CEK KELENGKAPAN (Nama, Kategori, Alamat wajib ada)
+    const isDataComplete = (nama && kategori && alamat && alamat !== '-');
+    const previewBox = document.getElementById('previewBox');
+    
+    if (!previewBox) return;
 
-    const harga = document.querySelector('input[name="harga_tiket"]')?.value;
-    document.getElementById('pvHarga').innerText =
-        harga && harga > 0 ? 'Rp ' + harga : 'Gratis';
+    if (!isDataComplete) {
+        previewBox.style.display = 'none';
+        return; 
+    }
 
-    document.getElementById('pvJam').innerText =
-        document.getElementById('jamOperasional')?.value || '-';
+    // 3. TAMPILKAN
+    previewBox.style.display = 'block';
+    previewBox.style.animation = 'fadeInUp 0.5s ease-out';
 
-    const lat = document.getElementById('latitude')?.value;
-    const lng = document.getElementById('longitude')?.value;
-    document.getElementById('pvKoordinat').innerText =
-        lat && lng ? `${lat}, ${lng}` : '-';
+    // Format Harga
+    let hargaText = 'Gratis';
+    if (hargaVal && parseInt(hargaVal) > 0) {
+        hargaText = 'Rp ' + parseInt(hargaVal).toLocaleString('id-ID');
+    }
 
-    document.getElementById('pvAlamat').innerText =
-        document.querySelector('textarea[name="alamat"]')?.value || '-';
+    // Helper Function
+    function safeSetText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = value; // Pakai innerHTML biar bisa kasih warna/bold jika perlu
+    }
 
-    const box = document.getElementById('previewBox');
-    if (box) box.style.display = 'block';
+    // Isi Data
+    safeSetText('pvNama', nama);
+    safeSetText('pvKategori', kategori);
+    safeSetText('pvHarga', hargaText);
+    safeSetText('pvJam', jamText); // Data Baru
+    safeSetText('pvAlamat', alamat);
 };
