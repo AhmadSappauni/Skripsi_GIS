@@ -1,45 +1,45 @@
-// public/js/admin/jam-operasional.js
-
 document.addEventListener("DOMContentLoaded", function() {
+    // 1. Ambil Elemen
     const is24 = document.getElementById('is24Jam');
     const jamRange = document.getElementById('jamRange');
     const jamOperasional = document.getElementById('jamOperasional');
     const jamBuka = document.getElementById('jamBuka');
     const jamTutup = document.getElementById('jamTutup');
 
-    // Fungsi update hidden input & preview
+    // [PENTING] Cek Null Safety: Jika elemen tidak ada di halaman ini, BERHENTI.
+    if (!is24 || !jamRange) return; 
+
+    // 2. Fungsi update state
     function updateState() {
         if (is24.checked) {
-            // Jika 24 Jam
+            // Mode 24 Jam
             jamRange.style.opacity = '0.5';
-            jamRange.style.pointerEvents = 'none'; // Matikan klik
+            jamRange.style.pointerEvents = 'none'; 
             
-            // Reset input manual
-            jamBuka.value = '';
-            jamTutup.value = '';
+            if(jamBuka) jamBuka.value = '';
+            if(jamTutup) jamTutup.value = '';
             
-            // Set hidden value untuk preview
-            jamOperasional.value = '24 Jam';
+            if(jamOperasional) jamOperasional.value = '24 Jam';
         } else {
-            // Jika Manual
+            // Mode Manual
             jamRange.style.opacity = '1';
             jamRange.style.pointerEvents = 'auto';
             
-            if (jamBuka.value && jamTutup.value) {
-                jamOperasional.value = `${jamBuka.value} - ${jamTutup.value} WITA`;
+            if (jamBuka && jamTutup && jamBuka.value && jamTutup.value) {
+                if(jamOperasional) jamOperasional.value = `${jamBuka.value} - ${jamTutup.value} WITA`;
             } else {
-                jamOperasional.value = '';
+                if(jamOperasional) jamOperasional.value = '';
             }
         }
 
-        // Panggil update preview jika fungsinya ada
+        // Panggil preview jika ada
         if (typeof window.updatePreview === 'function') {
             window.updatePreview();
         }
     }
 
-    // Event Listeners
+    // 3. Pasang Event Listeners
     is24.addEventListener('change', updateState);
-    jamBuka.addEventListener('change', updateState);
-    jamTutup.addEventListener('change', updateState);
+    if(jamBuka) jamBuka.addEventListener('input', updateState);
+    if(jamTutup) jamTutup.addEventListener('input', updateState);
 });

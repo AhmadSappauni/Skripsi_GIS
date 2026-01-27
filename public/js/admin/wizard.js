@@ -77,48 +77,58 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // --- WIZARD LOGIC ---
-    function updateWizard() {
-        contents.forEach((content, index) => {
-            if (index === currentStep) {
-                content.classList.add('active');
-            } else {
-                content.classList.remove('active');
-            }
-        });
+    // --- MODIFIKASI FUNGSI updateWizard (DI DALAM WIZARD.JS) ---
 
-        indicators.forEach((step, index) => {
-            step.classList.remove('active', 'completed');
-            if (index === currentStep) {
-                step.classList.add('active');
-            } else if (index < currentStep) {
-                step.classList.add('completed');
-            }
-        });
-
-        if (currentStep === 0) {
-            prevBtn.style.display = 'none';
+function updateWizard() {
+    // 1. Update Tampilan Step & Indikator (Sama seperti sebelumnya)
+    contents.forEach((content, index) => {
+        if (index === currentStep) {
+            content.classList.add('active');
         } else {
-            prevBtn.style.display = 'inline-flex';
+            content.classList.remove('active');
         }
+    });
 
-        if (currentStep === contents.length - 1) {
-            nextBtn.style.display = 'none';
-            submitBtn.style.display = 'inline-flex';
-            if (typeof window.updatePreview === 'function') window.updatePreview();
-        } else {
-            nextBtn.style.display = 'inline-flex';
-            submitBtn.style.display = 'none';
+    indicators.forEach((step, index) => {
+        step.classList.remove('active', 'completed');
+        if (index === currentStep) {
+            step.classList.add('active');
+        } else if (index < currentStep) {
+            step.classList.add('completed');
         }
+    });
 
-        if (currentStep === 2 && window.map) {
+    // 2. Atur Tombol Prev/Next (Sama)
+    if (currentStep === 0) {
+        prevBtn.style.display = 'none';
+    } else {
+        prevBtn.style.display = 'inline-flex';
+    }
+
+    if (currentStep === contents.length - 1) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-flex';
+        // Panggil preview hanya di langkah terakhir
+        if (typeof window.updatePreview === 'function') window.updatePreview();
+    } else {
+        nextBtn.style.display = 'inline-flex';
+        submitBtn.style.display = 'none';
+    }
+
+    // --- [PERBAIKAN UTAMA] LOGIKA KHUSUS LANGKAH 2 (PETA) ---
+    // Pastikan initMap dipanggil saat masuk ke langkah index 2 (Lokasi)
+    if (currentStep === 2) {
+        // Cek apakah fungsi initMap sudah tersedia di global scope?
+        if (typeof window.initMap === 'function') {
+            // Beri jeda sedikit agar div #map muncul (display block) dulu
             setTimeout(() => {
-                window.map.invalidateSize();
-                if(latInput.value && lngInput.value) {
-                    window.map.setView([latInput.value, lngInput.value], 15);
-                }
-            }, 500);
+                window.initMap(); 
+            }, 300);
+        } else {
+            console.warn("Fungsi initMap tidak ditemukan. Pastikan script inline peta ada.");
         }
     }
+}
 
     function isStepValid() {
         if (currentStep === 0) {

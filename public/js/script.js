@@ -299,7 +299,7 @@ window.showNearbyWisata = function(centerLat, centerLng, centerName, parentId) {
     });
 
     if (count === 0) {
-        showToast("Info", `Tidak ada wisata dalam radius ${RADIUS_KM} KM`);
+        showToast("Info", `Tidak ada wisata alternatif dalam radius ${RADIUS_KM} KM`);
     } else {
         showToast("Berhasil", `Ditemukan ${count} wisata dalam radius ${RADIUS_KM} KM`);
     }
@@ -472,23 +472,30 @@ function highlightMarker(id) {
     }
 }
 
-// Global List untuk Navigasi Panel
-let wisataList = [];
-let currentIndex = 0;
+window.wisataList = [];
+window.currentIndex = 0;
+
 document.addEventListener("DOMContentLoaded", function () {
     if (Array.isArray(window.wisataData)) wisataList = window.wisataData;
 });
 
 window.openDetailPanelById = function(id) {
-    if (!Array.isArray(window.wisataData)) return;
-    wisataList = window.wisataData;
-    currentIndex = wisataList.findIndex(w => w.id === id);
+    if (!Array.isArray(window.allWisataData)) return;
+
+    window.wisataList = window.allWisataData;
+    id = Number(id);
+
+    window.currentIndex = wisataList.findIndex(w => w.id === id);
     if (currentIndex === -1) return;
 
-    const panel = document.getElementById('detailPanel');
-    panel.classList.add('active');
-    setTimeout(() => { updatePanel(); highlightMarker(id); }, 50);
-}
+    document.getElementById('detailPanel').classList.add('active');
+
+    setTimeout(() => {
+        updatePanel();
+        highlightMarker(id);
+    }, 50);
+};
+
 
 function updatePanel() {
     if (!wisataList || wisataList.length === 0) return;
@@ -612,26 +619,49 @@ window.applyDirectoryFilter = function () {
     if (count === 0) container.innerHTML = `<div class="directory-empty">Tidak ada wisata sesuai filter</div>`;
 };
 
+// --- FOKUS LOKASI DARI DIREKTORI (STYLE SESUAI PERMINTAAN) ---
+// --- FOKUS LOKASI DARI DIREKTORI (SUDAH DIPERBAIKI) ---
 window.focusOnLocation = function(lat, lng, id) {
-    focusLayer.clearLayers();
+    focusLayer.clearLayers(); 
+    
     const target = allWisataData.find(w => w.id == id);
     if (!target) return;
 
     const iconWisata = icons[target.kategori] || icons.Default;
     const marker = L.marker([lat, lng], { icon: iconWisata }).addTo(focusLayer);
-    map.flyTo([lat, lng], 16, { animate: true });
+    
+    map.flyTo([lat, lng], 16, { animate: true, duration: 1.5 });
 
-    // Show popup immediately with minimal actions
+    const hargaText = target.harga_tiket == 0 ? "Gratis" : "Rp " + new Intl.NumberFormat('id-ID').format(target.harga_tiket);
+    const finalImage = getImageUrl(target.gambar);
+
+    // --- PERBAIKAN DI SINI ---
     const popupContent = `
         <div class="popup-card">
             <div class="popup-image-container">
-                <img src="${getImageUrl(target.gambar)}" class="popup-image">
+                <button type="button" 
+                    onclick="event.stopPropagation(); openDetailPanelById('${target.id}')" 
+                    class="btn-detail-corner" 
+                    title="Lihat Detail">
+                    ↗
+                </button>
+                
+                <img src="${finalImage}" class="popup-image" alt="${target.nama_tempat}" onerror="this.src='https://placehold.co/400?text=IMG'">
             </div>
-            <div class="popup-info"><h3 class="popup-title">${target.nama_tempat}</h3></div>
+            
+            <div class="popup-info">
+                <h3 class="popup-title">${target.nama_tempat}</h3>
+                <p class="popup-price" style="margin-top: 5px; color: #059669; font-weight: 700;">${hargaText}</p>
+            </div>
+
             <div class="popup-actions-container">
-                 <button onclick="rerouteTo(${target.latitude}, ${target.longitude}, ${target.harga_tiket}, ${target.id})" class="btn-modern btn-indigo-outline">Mulai Rute Dari Sini</button>
+                <button onclick="rerouteTo(${target.latitude}, ${target.longitude}, ${target.harga_tiket}, ${target.id})" 
+                    class="btn-modern btn-indigo-outline" style="width: 100%;">
+                    Mulai Rute Dari Sini
+                </button>
             </div>
         </div>`;
+    
     marker.bindPopup(popupContent).openPopup();
 };
 
