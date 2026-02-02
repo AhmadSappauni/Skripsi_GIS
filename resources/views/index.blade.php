@@ -272,93 +272,97 @@
 
         /* --- STYLE UNTUK KARTU DIREKTORI (YANG HILANG) --- */
 
-/* Container Grid */
-#directoryList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsif */
-    gap: 20px;
-    padding: 25px;
-    background: #f8fafc;
-}
+        /* Container Grid */
+        #directoryList {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            /* Responsif */
+            gap: 20px;
+            padding: 25px;
+            background: #f8fafc;
+        }
 
-/* Kartu Wisata */
-.dir-card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    flex-direction: column;
-}
+        /* Kartu Wisata */
+        .dir-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
 
-.dir-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-    border-color: #c7d2fe;
-}
+        .dir-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border-color: #c7d2fe;
+        }
 
-/* Pembungkus Gambar (Agar Ukuran Sama) */
-.dir-card-img-wrapper {
-    width: 100%;
-    height: 140px; /* Tinggi fix agar rapi */
-    background: #f1f5f9;
-    position: relative;
-}
+        /* Pembungkus Gambar (Agar Ukuran Sama) */
+        .dir-card-img-wrapper {
+            width: 100%;
+            height: 140px;
+            /* Tinggi fix agar rapi */
+            background: #f1f5f9;
+            position: relative;
+        }
 
-.dir-card-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Gambar tidak penyok */
-}
+        .dir-card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Gambar tidak penyok */
+        }
 
-/* Body Kartu */
-.dir-card-body {
-    padding: 12px 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
+        /* Body Kartu */
+        .dir-card-body {
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
 
-.dir-card-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1e293b;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .dir-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e293b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-.dir-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-    margin-top: 5px;
-}
+        .dir-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            margin-top: 5px;
+        }
 
-.dir-cat {
-    background: #eef2ff;
-    color: #4f46e5;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-weight: 600;
-}
+        .dir-cat {
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
 
-.dir-price {
-    color: #d97706; /* Warna oranye untuk harga */
-    font-weight: 700;
-}
+        .dir-price {
+            color: #d97706;
+            /* Warna oranye untuk harga */
+            font-weight: 700;
+        }
 
-/* Pesan Jika Kosong */
-.directory-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 40px;
-    color: #94a3b8;
-    font-size: 14px;
-}
+        /* Pesan Jika Kosong */
+        .directory-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
     </style>
 
 </head>
@@ -641,7 +645,7 @@
                             </div>
 
                             <div style="display: flex; gap: 15px; align-items: center;">
-                                <img src="{{ Str::startsWith($wisata->gambar, ['http', 'data:']) ? $wisata->gambar : asset('storage/' . $wisata->gambar) }}"
+                                <img src="{{ Str::startsWith($wisata->gambar, ['http', 'data:']) ? $wisata->gambar : asset( $wisata->gambar) }}"
                                     class="wisata-img"
                                     style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover; flex-shrink: 0; background: #f1f5f9;"
                                     onerror="this.onerror=null; this.src='https://placehold.co/400x400/e2e8f0/64748b?text=IMG';">
@@ -693,38 +697,44 @@
     </div>
 
     <div id="directoryModal" class="modal-overlay" style="display: none; z-index: 9999;">
-    <div class="modal-content" style="background: white; width: 95%; max-width: 900px; height: 90vh; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+        <div class="modal-content"
+            style="background: white; width: 95%; max-width: 900px; height: 90vh; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
 
-        <div style="padding: 20px 25px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: white;">
-            <div>
-                <h3 style="margin: 0; font-size: 20px; color: #1e293b; font-weight: 800;">Jelajahi Wisata</h3>
-                <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Temukan destinasi terbaik di Banjarbakula</p>
-            </div>
-            <button onclick="window.closeDirectoryModal()" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">✕</button>
-        </div>
-
-        <div class="dir-action-bar">
-            <div class="search-pill">
-                <i class="ri-search-line" style="color: #94a3b8;"></i>
-                <input type="text" id="dirSearchInput" placeholder="Ketik nama tempat wisata..." onkeyup="applyDirectoryFilter()">
-            </div>
-            <button id="btnDirFilter" class="btn-filter-toggle" onclick="toggleDirectoryFilters()" title="Filter Lanjutan">
-                <i class="ri-equalizer-line"></i>
-            </button>
-        </div>
-
-        <div id="dirFilterPanel" class="hidden-filter-panel">
-            <div class="filter-grid">
+            <div
+                style="padding: 20px 25px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: white;">
                 <div>
+                    <h3 style="margin: 0; font-size: 20px; color: #1e293b; font-weight: 800;">Jelajahi Wisata</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 12px; color: #94a3b8;">Temukan destinasi terbaik di
+                        Banjarbakula</p>
+                </div>
+                <button onclick="window.closeDirectoryModal()"
+                    style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;">✕</button>
+            </div>
+
+            <div class="dir-action-bar">
+                <div class="search-pill">
+                    <i class="ri-search-line" style="color: #94a3b8;"></i>
+                    <input type="text" id="dirSearchInput" placeholder="Ketik nama tempat wisata..."
+                        onkeyup="applyDirectoryFilter()">
+                </div>
+                <button id="btnDirFilter" class="btn-filter-toggle" onclick="toggleDirectoryFilters()"
+                    title="Filter Lanjutan">
+                    <i class="ri-equalizer-line"></i>
+                </button>
+            </div>
+
+            <div id="dirFilterPanel" class="hidden-filter-panel">
+                <div class="filter-grid">
+                    <div>
                         <label
                             style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:5px; display:block;">WILAYAH</label>
                         <select id="dirRegionSelect" class="form-select" onchange="applyDirectoryFilter()">
-                             <option value="">Semua Wilayah</option>
-                             <option value="Banjarmasin">Banjarmasin</option>
-                             <option value="Banjarbaru">Banjarbaru</option>
-                             <option value="Martapura">Kab. Banjar</option>
-                             <option value="Barito Kuala">Barito Kuala</option>
-                             <option value="Tanah Laut">Tanah Laut</option>
+                            <option value="">Semua Wilayah</option>
+                            <option value="Banjarmasin">Banjarmasin</option>
+                            <option value="Banjarbaru">Banjarbaru</option>
+                            <option value="Martapura">Kab. Banjar</option>
+                            <option value="Barito Kuala">Barito Kuala</option>
+                            <option value="Tanah Laut">Tanah Laut</option>
                         </select>
                     </div>
                     <div>
@@ -732,33 +742,37 @@
                             style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:5px; display:block;">KATEGORI</label>
                         <select id="dirKategoriSelect" class="form-select" onchange="applyDirectoryFilter()">
                             <option value="">Semua Kategori</option>
-                             <option value="Alam">Alam</option>
-                             <option value="Religi">Religi</option>
-                             <option value="Kuliner">Kuliner</option>
-                             <option value="Belanja">Belanja</option>
-                             <option value="Budaya">Budaya</option>
-                             <option value="Rekreasi">Rekreasi</option>
+                            <option value="Alam">Alam</option>
+                            <option value="Religi">Religi</option>
+                            <option value="Kuliner">Kuliner</option>
+                            <option value="Belanja">Belanja</option>
+                            <option value="Budaya">Budaya</option>
+                            <option value="Rekreasi">Rekreasi</option>
                         </select>
                     </div>
 
                     <div>
                         <label
-                            style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:5px; display:block;">BUDGET MAX</label>
+                            style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:5px; display:block;">BUDGET
+                            MAX</label>
                         <select id="dirBudgetSelect" class="form-select" onchange="applyDirectoryFilter()">
                             <option value="">Semua Budget</option>
                             <option value="0">Gratis</option>
-                            <option value="25000">< 25rb</option>
-                            <option value="50000">< 50rb</option>
-                            <option value="100000">< 100rb</option>
+                            <option value="25000">
+                                < 25rb</option>
+                            <option value="50000">
+                                < 50rb</option>
+                            <option value="100000">
+                                < 100rb</option>
                         </select>
                     </div>
+                </div>
+            </div>
+
+            <div id="directoryList" style="flex: 1; overflow-y: auto;">
             </div>
         </div>
-
-        <div id="directoryList" style="flex: 1; overflow-y: auto;">
-            </div>
     </div>
-</div>
 
     <div id="detailPanel" class="detail-panel">
         <div class="panel-image-wrapper">
@@ -843,30 +857,34 @@
         </div>
     </div>
 
+    <!-- LEAFLET -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
 
+    <!-- DATA DARI BACKEND -->
     <script>
-        // DATA PASSING KE JS
         window.wisataData = @json(isset($hasil) ? $hasil : null);
         window.wisataLainData = @json(isset($wisata_lain) ? $wisata_lain : null);
         window.allWisataData = @json($semua_wisata ?? []);
-
-        // Sisa Budget Logic
         window.realSisaBudget = @json(isset($sisa_budget) ? $sisa_budget : request('budget') ?? 0);
     </script>
-    <script src="{{ asset('js/script.js') }}"></script>
 
-    <script>
-        // Init Toast jika ada parameter URL
-        document.addEventListener("DOMContentLoaded", function() {
-            if (window.location.search.includes('rute_fix')) {
-                if (typeof showToast === 'function') {
-                    showToast("Rute Ditemukan! 🚀", "Menampilkan rekomendasi perjalanan terbaik.");
-                }
-            }
-        });
-    </script>
+    <!-- CORE & FEATURES -->
+    <script src="{{ asset('js/core/state.js') }}"></script>
+    <script src="{{ asset('js/core/utils.js') }}"></script>
+    <script src="{{ asset('js/core/map-init.js') }}"></script>
+    <script src="{{ asset('js/features/route.js') }}"></script>
+    <script src="{{ asset('js/features/nearby.js') }}"></script>
+    <script src="{{ asset('js/features/geojson.js') }}"></script>
+    <script src="{{ asset('js/features/detail-panel.js') }}"></script>
+
+    <!-- UI -->
+    <script src="{{ asset('js/ui/toast.js') }}"></script>
+    <script src="{{ asset('js/ui/modal.js') }}"></script>
+    <script src="{{ asset('js/ui/directory-ui.js') }}"></script>
+
+    <!-- OPTIONAL PAGE INIT -->
+    <script src="{{ asset('js/ui/page-init.js') }}"></script>
 
 </body>
 

@@ -759,8 +759,9 @@
                         @forelse($dataWisata as $w)
                             <tr class="row-card">
                                 <td>
-                                    <img src="{{ Str::startsWith($w->gambar, ['http', 'data:']) ? $w->gambar : asset('images/' . $w->gambar) }}"
-                                        class="t-img" onerror="this.src='https://placehold.co/100?text=IMG'">
+                                    <img src="{{ Str::startsWith($w->gambar, ['http', 'data:']) ? $w->gambar : asset($w->gambar) }}"
+                                        class="t-img"
+                                        onerror="this.src='https://placehold.co/100?text=IMG'">
                                 </td>
                                 <td>
                                     <div class="t-name">{{ $w->nama_tempat }}</div>

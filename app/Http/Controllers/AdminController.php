@@ -18,9 +18,9 @@ class AdminController extends Controller
         // 1. Logic Search Biasa
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('nama_tempat', 'like', "%{$search}%")
-                  ->orWhere('alamat', 'like', "%{$search}%");
+                    ->orWhere('alamat', 'like', "%{$search}%");
             });
         }
 
@@ -64,50 +64,41 @@ class AdminController extends Controller
     // 3. PROSES SIMPAN (STORE) - PERBAIKAN LOGIKA GAMBAR
     public function store(Request $request)
     {
-        // 1. Validasi
         $request->validate([
             'nama_tempat' => 'required|string',
             'kategori'    => 'required|string',
             'latitude'    => 'required',
             'longitude'   => 'required',
             'hari_buka'   => 'required|array',
-            'gambar_file' => 'nullable|image|max:2048', // Max 2MB agar DB tidak terlalu berat
+            'gambar_file' => 'nullable|image|max:2048',
             'gambar_url'  => 'nullable|url',
         ]);
 
         $finalGambar = null;
 
-        // --- LOGIKA BARU: SIMPAN SEBAGAI BASE64 KE DATABASE ---
-        
-        // Prioritas 1: User Upload File -> Ubah jadi kode teks (Base64)
+        // PRIORITAS 1: Upload file
         if ($request->hasFile('gambar_file')) {
             $file = $request->file('gambar_file');
-            
-            // Baca isi file
-            $path = file_get_contents($file->getRealPath());
-            // Encode ke Base64
-            $base64 = base64_encode($path);
-            // Gabungkan header tipe data
-            $finalGambar = 'data:' . $file->getMimeType() . ';base64,' . $base64;
-            
-        } 
-        // Prioritas 2: User Isi URL
+            $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/wisata'), $filename);
+
+            $finalGambar = 'uploads/wisata/' . $filename;
+        }
+        // PRIORITAS 2: URL
         elseif ($request->filled('gambar_url')) {
             $finalGambar = $request->gambar_url;
         }
 
-        // Logika Jam Buka
         $jamBuka = $request->has('is_24_jam')
             ? '24 Jam'
             : ($request->jam_buka . ' - ' . $request->jam_tutup . ' WITA');
 
-        // Simpan ke Database
         Wisata::create([
             'nama_tempat' => $request->nama_tempat,
             'harga_tiket' => $request->harga_tiket ?? 0,
             'kategori'    => $request->kategori,
             'deskripsi'   => $request->deskripsi ?? '',
-            'gambar'      => $finalGambar, // <-- Ini sekarang isinya teks panjang (Base64)
+            'gambar'      => $finalGambar, // PATH / URL
             'latitude'    => $request->latitude,
             'longitude'   => $request->longitude,
             'alamat'      => $request->alamat ?? '',
@@ -117,6 +108,7 @@ class AdminController extends Controller
 
         return redirect()->route('admin.index')->with('sukses', 'Data wisata berhasil disimpan!');
     }
+
 
     // 4. FORM EDIT
     public function edit($id)
@@ -139,23 +131,25 @@ class AdminController extends Controller
             'gambar_url'  => 'nullable|url',
         ]);
 
-        $finalGambar = $wisata->gambar; // Default: Pakai gambar lama
-
-        // --- LOGIKA BARU: UPDATE GAMBAR BASE64 ---
+        $finalGambar = $wisata->gambar; 
         
-        // Skenario A: User Upload File Baru
         if ($request->hasFile('gambar_file')) {
-            // Kita tidak perlu File::delete() lagi karena tidak ada file fisik yang dihapus
-            
+
+            // Hapus gambar lama jika file lokal
+            if (
+                $wisata->gambar && !str_starts_with($wisata->gambar, 'http')
+                && File::exists(public_path($wisata->gambar))
+            ) {
+                File::delete(public_path($wisata->gambar));
+            }
+
             $file = $request->file('gambar_file');
-            $path = file_get_contents($file->getRealPath());
-            $base64 = base64_encode($path);
-            $finalGambar = 'data:' . $file->getMimeType() . ';base64,' . $base64;
-        } 
-        // Skenario B: User Ganti URL
-        elseif ($request->filled('gambar_url')) {
-            $finalGambar = $request->gambar_url;
+            $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/wisata'), $filename);
+
+            $finalGambar = 'uploads/wisata/' . $filename;
         }
+
 
         // Logika Jam
         $jamBuka = $request->has('is_24_jam')

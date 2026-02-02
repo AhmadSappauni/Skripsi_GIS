@@ -1,0 +1,308 @@
+.btn {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.4);
+}
+
+.btn-outline {
+    background: white;
+    border: 2px dashed #cbd5e1;
+    color: var(--text-light);
+}
+.btn-outline:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.btn-modern {
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    transition: 0.2s;
+}
+.btn-blue-soft {
+    background: #e0e7ff;
+    color: var(--primary);
+}
+.btn-blue-soft:hover {
+    background: #c7d2fe;
+}
+.btn-orange-soft {
+    background: #ffedd5;
+    color: #c2410c;
+}
+.btn-orange-soft:hover {
+    background: #fed7aa;
+}
+.btn-indigo-outline {
+    background: white;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+.btn-indigo-outline:hover {
+    background: #eef2ff;
+}
+.btn-red-solid {
+    background: #ef4444;
+    color: white;
+}
+.btn-red-solid:hover {
+    background: #dc2626;
+}
+
+.btn-filter-toggle {
+    padding: 12px 24px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-filter-toggle:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+.btn-filter-toggle.active {
+    background: #eef2ff;
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-close-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #f8fafc;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.2s ease;
+}
+.btn-close-circle:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    transform: rotate(90deg) scale(1.1);
+}
+
+.btn-detail-corner {
+    position: absolute;
+    bottom: 8px;
+    right: 8px; /* Pojok kanan bawah */
+
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.95); /* Putih agak transparan */
+    color: var(--primary); /* Warna ungu tema */
+    border-radius: 50%; /* Bentuk bulat */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Shadow sedikit dipertegas biar kelihatan di atas gambar terang */
+    z-index: 10; /* Pastikan di atas gambar */
+    transition: all 0.2s ease;
+    border: 1px solid #eef2ff;
+}
+
+/* Efek Hover */
+.btn-detail-corner:hover {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.1); /* Efek membesar sedikit saat disorot */
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); /* Tambah glow ungu saat hover */
+}
+
+.badge-clean {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+.badge-clean.primary {
+    background: #e0e7ff;
+    color: var(--primary);
+}
+.badge-clean.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.dir-badge-category {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 5;
+
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--primary);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+}
+
+.dir-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+
+    /* 🔑 INI KUNCI UTAMA */
+    min-height: 300px;
+
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    position: relative;
+}
+
+.dir-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.12);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.toast-notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 15px 25px;
+    border-radius: 50px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 10000;
+    transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 1px solid #f1f5f9;
+}
+.toast-notification.show {
+    top: 30px;
+}
+.toast-icon {
+    font-size: 20px;
+    background: #fef2f2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fee2e2;
+}
+.toast-message h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #dc2626;
+}
+.toast-message p {
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.cm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+/* Kotak Modal */
+.cm-box {
+    background: white;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Tombol Modal (INI YANG HILANG DI SCREENSHOT KAMU) */
+.cm-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.95rem;
+}
+
+/* Tombol Batal (Abu-abu) */
+.cm-btn-cancel {
+    background: #f1f5f9;
+    color: #64748b;
+}
+.cm-btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+/* Tombol Aksi (Merah/Biru) */
+.cm-btn-confirm {
+    background: #ef4444;
+    color: white;
+}
+.cm-btn-confirm:hover {
+    background: #dc2626;
+}

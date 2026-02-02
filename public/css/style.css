@@ -865,7 +865,7 @@ body {
 }
 
 .compass-control img:hover {
-    transform: scale(1.1);
+    transform: scale(1.5);
     opacity: 1;
     cursor: help;
 }
@@ -991,13 +991,6 @@ body {
     border-radius: 16px; padding: 8px 12px;
 }
 
-.nav-btn {
-    width: 32px; height: 32px; border-radius: 8px;
-    border: 1px solid #cbd5e1; background: white;
-    cursor: pointer; transition: 0.2s;
-    display: flex; align-items: center; justify-content: center;
-}
-.nav-btn:hover { background: #e0e7ff; border-color: #6366f1; color: #6366f1; }
 
 .panel-nav-text { font-size: 12px; font-weight: 600; color: #64748b; }
 
@@ -1007,6 +1000,13 @@ body {
 .panel-actions {
     display: flex; flex-direction: column; gap: 12px; margin-top: auto;
 }
+.nav-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid #cbd5e1; background: white;
+    cursor: pointer; transition: 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+.nav-btn:hover { background: #e0e7ff; border-color: #6366f1; color: #6366f1; }
 
 .btn-rute-hero {
     background: linear-gradient(135deg, #6366f1, #4f46e5);
