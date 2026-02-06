@@ -875,249 +875,230 @@ body {
    Desktop: Side Panel (Kanan)
    Mobile: Bottom Sheet (Bawah)
    ========================================= */
-
+/* =========================================
+   1. CONTAINER UTAMA (FLOATING CARD + FLEXBOX)
+   ========================================= */
 .detail-panel {
+    /* POSISI MELAYANG (Style Asli Kamu) */
     position: fixed;
-    z-index: 10001; /* Di atas sidebar kiri */
-    background: #ffffff;
-    box-shadow: 0 0 40px rgba(0,0,0,0.15);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Efek membal halus */
-    display: flex;
-    flex-direction: column;
-}
-
-/* --- TAMPILAN DESKTOP (DEFAULT) --- */
-.detail-panel {
-    top: 20px;
-    right: -450px; /* Sembunyi di kanan */
+    top: 20px;            /* Jarak dari atas */
+    right: -480px;        /* Sembunyi */
     width: 400px;
-    height: calc(100vh - 40px); /* Ada jarak atas bawah */
-    border-radius: 24px;
-    margin-right: 20px;
+    height: calc(100vh - 40px); /* Tinggi layar dikurangi jarak atas-bawah */
+    margin-right: 20px;   /* Jarak dari kanan */
+    
+    background: #ffffff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    border-radius: 24px;  /* Sudut Melengkung */
+    z-index: 10001;
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* LOGIKA SCROLL (Style Saya) */
+    display: flex;
+    flex-direction: column; /* Susun Tegak */
+    overflow: hidden;       /* Agar radius tidak bocor */
 }
 
 .detail-panel.active {
     right: 0;
-    margin-right: 20px;
 }
-
-/* --- GAMBAR HERO --- */
-.panel-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 240px;
-    flex-shrink: 0;
-    overflow: hidden;
-    border-radius: 24px 24px 0 0;
-}
-
-.panel-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Gradient Hitam di bawah gambar agar teks putih terbaca (opsional) */
-.panel-overlay-gradient {
-    position: absolute;
-    bottom: 0; left: 0; width: 100%; height: 50%;
-    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-    pointer-events: none;
-}
-
-/* Tombol Close Floating */
-.panel-close {
-    position: absolute;
-    top: 15px; right: 15px;
-    width: 36px; height: 36px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(4px);
-    border: none; border-radius: 50%;
-    font-size: 20px; color: #1e293b;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    display: flex; align-items: center; justify-content: center;
-    transition: 0.2s;
-    z-index: 10;
-}
-.panel-close:hover { transform: scale(1.1); background: white; color: #ef4444; }
-
-/* Badge Kategori */
-.panel-badge {
-    position: absolute;
-    bottom: 15px; left: 20px;
-    background: rgba(255, 255, 255, 0.95);
-    color: #6366f1;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px; font-weight: 700;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    backdrop-filter: blur(4px);
-    text-transform: uppercase; letter-spacing: 0.5px;
-}
-
-/* --- BODY KONTEN --- */
-.panel-body {
-    padding: 25px;
-    overflow-y: auto; /* Agar bisa discroll jika konten panjang */
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    height: 100%;
-}
-
-.panel-title {
-    font-size: 24px; font-weight: 800; color: #1e293b;
-    line-height: 1.2; margin: 0;
-}
-
-.panel-price {
-    font-size: 18px; font-weight: 700; color: #10b981; margin: 0;
-}
-
-.panel-rating {
-    font-size: 12px; font-weight: 600; color: #f59e0b;
-    background: #fffbeb; padding: 4px 8px; border-radius: 6px;
-}
-
-.panel-address {
-    font-size: 13px; color: #64748b; margin-top: 8px; line-height: 1.5;
-}
-
-/* Navigasi Next/Prev */
-.panel-nav {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #f8fafc; border: 1px solid #e2e8f0;
-    border-radius: 16px; padding: 8px 12px;
-}
-
-
-.panel-nav-text { font-size: 12px; font-weight: 600; color: #64748b; }
-
-.panel-divider { height: 1px; background: #e2e8f0; margin: 5px 0; }
-
-/* Tombol Aksi */
-.panel-actions {
-    display: flex; flex-direction: column; gap: 12px; margin-top: auto;
-}
-.nav-btn {
-    width: 32px; height: 32px; border-radius: 8px;
-    border: 1px solid #cbd5e1; background: white;
-    cursor: pointer; transition: 0.2s;
-    display: flex; align-items: center; justify-content: center;
-}
-.nav-btn:hover { background: #e0e7ff; border-color: #6366f1; color: #6366f1; }
-
-.btn-rute-hero {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: white; border: none; padding: 16px;
-    border-radius: 16px; font-size: 15px; font-weight: 700;
-    cursor: pointer; transition: 0.2s;
-    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
-}
-.btn-rute-hero:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(99, 102, 241, 0.5); }
-
-.btn-detail-outline {
-    background: white; border: 2px solid #e2e8f0; color: #64748b;
-    padding: 14px; border-radius: 16px; font-size: 14px; font-weight: 600;
-    text-align: center; text-decoration: none; cursor: pointer; transition: 0.2s;
-}
-.btn-detail-outline:hover { border-color: #6366f1; color: #6366f1; background: #eef2ff; }
-
 
 /* =========================================
-   MOBILE RESPONSIVE (BOTTOM SHEET)
+   2. BAGIAN ATAS (GAMBAR) - DIAM
+   ========================================= */
+.panel-image-wrapper {
+    width: 100%;
+    height: 240px;      /* Tinggi Gambar Tetap */
+    flex-shrink: 0;     /* JANGAN MENGECIL */
+    position: relative;
+    background: #f1f5f9;
+}
+
+/* Tombol Close & Badge */
+.panel-close {
+    position: absolute; top: 15px; right: 15px;
+    width: 36px; height: 36px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none; border-radius: 50%;
+    font-size: 20px; cursor: pointer;
+    z-index: 20; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.panel-badge {
+    position: absolute; bottom: 15px; left: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #6366f1; padding: 6px 14px;
+    border-radius: 20px; font-size: 12px; font-weight: 700;
+    z-index: 20; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Carousel Inner */
+.carousel-wrapper { width: 100%; height: 100%; position: relative; }
+.carousel-track { display: flex; height: 100%; transition: transform 0.4s ease; }
+.carousel-track img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+.carousel-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(0,0,0,0.3); color: white;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: none; cursor: pointer; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+}
+.carousel-btn.left { left: 10px; }
+.carousel-btn.right { right: 10px; }
+.carousel-dots {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; z-index: 10;
+}
+.carousel-dots span {
+    width: 6px; height: 6px; background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+}
+.carousel-dots span.active { background: white; transform: scale(1.2); }
+
+/* =========================================
+   3. BAGIAN ISI (BODY) - SCROLLABLE
+   ========================================= */
+.panel-body {
+    flex-grow: 1;    /* Ambil sisa ruang */
+    overflow-y: auto; /* SCROLL HANYA DI SINI */
+    padding: 25px;
+    background: white;
+    
+    /* Agar scroll smooth */
+    scroll-behavior: smooth;
+}
+
+/* Jarak aman di bawah agar konten terakhir tidak kepotong */
+.panel-body::after {
+    content: "";
+    display: block;
+    height: 40px; 
+}
+
+/* Custom Scrollbar */
+.panel-body::-webkit-scrollbar { width: 6px; }
+.panel-body::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 3px; }
+.panel-body::-webkit-scrollbar-track { background: transparent; }
+
+/* Elemen Text */
+.panel-header { margin-bottom: 20px; }
+.panel-title { font-size: 22px; font-weight: 800; color: #1e293b; margin: 0; line-height: 1.2; }
+.panel-price { font-size: 18px; font-weight: 700; color: #10b981; margin-top: 5px; }
+.panel-rating { 
+    display: inline-block; font-size: 12px; font-weight: 600; color: #f59e0b;
+    background: #fffbeb; padding: 4px 8px; border-radius: 6px; margin-top: 5px;
+}
+.panel-address { font-size: 13px; color: #64748b; margin: 15px 0; line-height: 1.5; }
+.panel-fasilitas-list { margin-top: 10px; }
+
+/* Navigasi Rute & Tombol */
+.panel-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #f8fafc; padding: 10px 15px; border-radius: 12px;
+    border: 1px solid #e2e8f0; margin-bottom: 20px;
+}
+.nav-btn {
+    width: 32px; height: 32px; border: 1px solid #cbd5e1; background: white;
+    border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.panel-divider { height: 1px; background: #e2e8f0; margin: 20px 0; }
+
+.btn-rute-hero {
+    width: 100%; padding: 14px; background: #4f46e5; color: white;
+    border: none; border-radius: 14px; font-weight: 700; font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+}
+
+/* =========================================
+   4. RATING & REVIEW (Fixed Style)
+   ========================================= */
+.rating-box {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 16px; padding: 20px; margin-top: 10px;
+}
+
+.star-rating {
+    display: flex; flex-direction: row-reverse; justify-content: center;
+    gap: 8px; margin: 10px 0;
+}
+/* Hilangkan Radio Button Jelek */
+.star-rating input { display: none !important; }
+
+.star-rating label {
+    font-size: 28px; color: #cbd5e1; cursor: pointer; transition: 0.2s;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f59e0b;
+}
+
+.review-list { margin-top: 20px; }
+.review-item { border-bottom: 1px solid #f1f5f9; padding: 12px 0; }
+.review-user { font-weight: 700; font-size: 13px; color: #1e293b; }
+.review-text { font-size: 13px; color: #64748b; margin-top: 4px; line-height: 1.5; }
+.review-star { color: #f59e0b; font-size: 12px; float: right; }
+
+/* =========================================
+   5. RESPONSIVE (HP)
    ========================================= */
 @media (max-width: 768px) {
     .detail-panel {
-        top: auto;          /* Reset posisi atas */
-        right: 0; left: 0;  /* Full width */
-        bottom: -100%;      /* Sembunyi di bawah */
-        
-        width: 100%;        /* Lebar penuh */
-        height: auto;       /* Tinggi menyesuaikan konten */
-        max-height: 85vh;   /* Maksimal 85% layar */
-        
-        margin: 0;          /* Reset margin desktop */
-        border-radius: 24px 24px 0 0; /* Sudut tumpul hanya di atas */
-        box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
+        top: auto; bottom: -100%; /* Reset Top, Muncul dari Bawah */
+        right: 0; left: 0;
+        width: 100%; height: 85vh; /* Tinggi 85% layar HP */
+        margin: 0; border-radius: 24px 24px 0 0;
     }
-
-    .detail-panel.active {
-        bottom: 0; /* Muncul dari bawah */
-        right: 0;  /* Reset posisi kanan */
-    }
-
-    .panel-image-wrapper {
-        height: 200px; /* Gambar sedikit lebih pendek di HP */
-    }
-
-    .panel-body {
-        padding: 20px;
-        padding-bottom: 30px; /* Tambahan padding bawah untuk HP */
-    }
-    
-    .panel-title { font-size: 20px; }
+    .detail-panel.active { bottom: 0; }
+    .panel-image-wrapper { height: 200px; }
 }
 
-/* corousel gambar */
-.carousel-wrapper {
-    position: relative;
-    width: 100%;
-    height: 220px;
-    overflow: hidden;
-    border-radius: 16px;
-}
-
-.carousel-track {
+/* --- STYLE UNTUK TAB MENU --- */
+.panel-tabs {
     display: flex;
-    height: 100%;
-    transition: transform 0.4s ease;
-}
-
-.carousel-track img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    flex-shrink: 0;
-}
-
-/* Tombol */
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.45);
-    color: white;
-    border: none;
-    font-size: 24px;
-    padding: 6px 12px;
-    cursor: pointer;
-    z-index: 5;
-    border-radius: 50%;
-}
-
-.carousel-btn.left { left: 10px; }
-.carousel-btn.right { right: 10px; }
-
-/* Dots */
-.carousel-dots {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-}
-
-.carousel-dots span {
-    width: 8px;
-    height: 8px;
-    background: rgba(255,255,255,0.5);
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.carousel-dots span.active {
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 20px;
     background: white;
+    position: sticky; /* Agar tab nempel di atas saat discroll (opsional) */
+    top: 0;
+    z-index: 10;
+}
+
+.tab-btn {
+    flex: 1; /* Bagi 2 sama rata */
+    padding: 15px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-btn:hover {
+    color: #6366f1;
+    background: #f8fafc;
+}
+
+.tab-btn.active {
+    color: #4f46e5;
+    border-bottom: 2px solid #4f46e5;
+    background: #eef2ff;
+}
+
+/* Helper untuk sembunyikan konten tab */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }

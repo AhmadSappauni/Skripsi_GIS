@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Smart Itinerary Banjarbakula</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -444,10 +445,6 @@
                             style="font-size: 12px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px;">
                             Filter Cerdas
                         </div>
-                        <div
-                            style="font-size: 10px; color: #64748b; background:#f1f5f9; padding:2px 8px; border-radius:4px;">
-                            Greedy Config
-                        </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 12px;">
@@ -593,7 +590,7 @@
 
                 <button type="submit" class="btn btn-primary"
                     style="width: 100%; padding: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);">
-                    🚀 Cari Rute Cerdas
+                    Cari Rute Cerdas
                 </button>
             </form>
 
@@ -645,7 +642,7 @@
                             </div>
 
                             <div style="display: flex; gap: 15px; align-items: center;">
-                                <img src="{{ Str::startsWith($wisata->gambar, ['http', 'data:']) ? $wisata->gambar : asset( $wisata->gambar) }}"
+                                <img src="{{ Str::startsWith($wisata->gambar, ['http', 'data:']) ? $wisata->gambar : asset($wisata->gambar) }}"
                                     class="wisata-img"
                                     style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover; flex-shrink: 0; background: #f1f5f9;"
                                     onerror="this.onerror=null; this.src='https://placehold.co/400x400/e2e8f0/64748b?text=IMG';">
@@ -775,27 +772,46 @@
     </div>
 
     <div id="detailPanel" class="detail-panel">
-        <div class="panel-image-wrapper">
-            <div class="carousel-wrapper">
-                <div id="carouselTrack" class="carousel-track"></div>
-                <button class="carousel-btn left" onclick="prevImage()">‹</button>
-                <button class="carousel-btn right" onclick="nextImage()">›</button>
-                <div id="carouselDots" class="carousel-dots"></div>
-            </div>
-            <div class="panel-overlay-gradient"></div>
-            <button class="panel-close" onclick="closeDetailPanel()">×</button>
-            <span id="panelKategori" class="panel-badge">Kategori</span>
-        </div>
 
-        <div class="panel-body">
+    <div class="panel-image-wrapper">
+        <div class="carousel-wrapper">
+            <div id="carouselTrack" class="carousel-track"></div>
+            <button class="carousel-btn left" onclick="prevImage()">‹</button>
+            <button class="carousel-btn right" onclick="nextImage()">›</button>
+            <div id="carouselDots" class="carousel-dots"></div>
+        </div>
+        <div class="panel-overlay-gradient"></div>
+        <button class="panel-close" onclick="closeDetailPanel()">×</button>
+        <span id="panelKategori" class="panel-badge">Kategori</span>
+    </div>
+
+    <div class="panel-body" style="padding: 0;"> <div class="panel-tabs">
+        <button class="tab-btn active" onclick="switchTab('info')">
+            <i class="ri-information-fill"></i> Informasi
+        </button>
+        <button class="tab-btn" onclick="switchTab('ulasan')">
+            <i class="ri-star-smile-fill"></i> Ulasan
+        </button>
+    </div>
+
+    <div style="padding: 0 25px 25px 25px;">
+
+        <div id="tabInfo" class="tab-content active">
+            
             <div class="panel-header">
                 <h2 id="panelNama" class="panel-title">Nama Tempat</h2>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
                     <p id="panelHarga" class="panel-price">Rp 0</p>
-                    <div class="panel-rating">⭐ 4.8</div>
+                    <div id="panelRating" class="panel-rating" onclick="switchTab('ulasan')" style="cursor:pointer;">
+                        ⭐ 0.0 (0)
+                    </div>
                 </div>
-                <p id="panelAlamat" class="panel-address">Alamat lengkap...</p>
             </div>
+
+            <div id="panelFasilitas" class="panel-fasilitas-list"></div>
+            <p id="panelAlamat" class="panel-address">Alamat lengkap...</p>
+
+            <div class="panel-divider"></div>
 
             <div class="panel-nav">
                 <button onclick="prevWisata()" class="nav-btn">←</button>
@@ -803,88 +819,124 @@
                 <button onclick="nextWisata()" class="nav-btn">→</button>
             </div>
 
-            <div class="panel-divider"></div>
-
-            <div class="panel-actions">
-                <button id="panelRuteBtn" class="btn-rute-hero"
-                    onclick="alert('Fitur navigasi Google Maps akan dibuka...')">
+            <div class="panel-actions" style="margin-top: 15px;">
+                <button id="panelRuteBtn" class="btn-rute-hero" onclick="alert('Membuka Maps...')">
                     <i class="ri-direction-fill"></i> Buka Google Maps
                 </button>
             </div>
         </div>
-    </div>
 
-    <div id="infoModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content"
-            style="background: white; width: 90%; max-width: 400px; border-radius: 24px; padding: 0; overflow: hidden;">
-            <div style="background: #eef2ff; padding: 30px 20px; text-align: center;">
-                <div
-                    style="width: 80px; height: 80px; background: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);">
-                    🎓
-                </div>
-                <h3 style="margin: 15px 0 5px 0; color: #1e293b; font-weight: 800;">Smart Itinerary</h3>
-                <p style="margin: 0; font-size: 12px; color: #6366f1; font-weight: 600;">Skripsi - Universitas Lambung
-                    Mangkurat</p>
+        <div id="tabUlasan" class="tab-content">
+            
+            <div class="rating-box" style="margin-top: 0;">
+                <h4 style="font-size:15px; font-weight:700; margin-bottom:10px; text-align:center;">
+                    Bagikan Pengalamanmu
+                </h4>
+                
+                <form id="formReview" onsubmit="submitReview(event)">
+                    <input type="hidden" id="reviewWisataId" name="wisata_id">
+                    
+                    <div class="star-rating">
+                        <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+                        <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+                        <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+                        <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+                        <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+                    </div>
+
+                    <textarea name="komentar" id="reviewKomentar" rows="3" class="form-input" 
+                        placeholder="Tulis ulasan disini..." style="width:100%; margin-top:10px; resize:none;"></textarea>
+                    
+                    <button type="submit" class="btn-rute-hero" 
+                        style="margin-top:15px; background:#1e293b; width:100%; border:none;">
+                        Kirim Ulasan
+                    </button>
+                </form>
             </div>
-            <div style="padding: 25px;">
-                <h4 style="font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 10px;">Pengembang</h4>
-                <p style="font-size: 13px; color: #64748b; margin-bottom: 5px;"><b>Ahmad Sappauni</b></p>
-                <p style="font-size: 12px; color: #94a3b8;">NIM. 2210131210010</p>
 
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
-                    <h4 style="font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 10px;">Metode</h4>
-                    <p style="font-size: 12px; color: #64748b; line-height: 1.6;">
-                        Aplikasi ini menggunakan <b>Algoritma Greedy</b> untuk optimalisasi rute dan <b>Haversine
-                            Formula</b> untuk perhitungan jarak akurat.
-                    </p>
-                </div>
-                <button onclick="closeInfoModal()" class="btn btn-primary"
-                    style="width: 100%; margin-top: 25px; padding: 12px; border-radius: 12px;">Tutup</button>
+            <div style="margin-top: 30px; margin-bottom: 50px;">
+                <h4 style="font-size:14px; font-weight:700; margin-bottom:15px; color:#334155;">
+                    Ulasan Terbaru
+                </h4>
+                <div id="reviewContainer" class="review-list">
+                    </div>
             </div>
         </div>
-    </div>
+        
+    </div> </div>
 
-    <div id="customToast" class="toast-notification">
-        <div class="toast-icon">✨</div>
-        <div class="toast-message">
-            <h4 id="toastTitle">Berhasil!</h4>
-            <p id="toastBody">Pesan notifikasi.</p>
+        <div id="infoModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content"
+                style="background: white; width: 90%; max-width: 400px; border-radius: 24px; padding: 0; overflow: hidden;">
+                <div style="background: #eef2ff; padding: 30px 20px; text-align: center;">
+                    <div
+                        style="width: 80px; height: 80px; background: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);">
+                        🎓
+                    </div>
+                    <h3 style="margin: 15px 0 5px 0; color: #1e293b; font-weight: 800;">Smart Itinerary</h3>
+                    <p style="margin: 0; font-size: 12px; color: #6366f1; font-weight: 600;">Skripsi - Universitas
+                        Lambung
+                        Mangkurat</p>
+                </div>
+                <div style="padding: 25px;">
+                    <h4 style="font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 10px;">Pengembang</h4>
+                    <p style="font-size: 13px; color: #64748b; margin-bottom: 5px;"><b>Ahmad Sappauni</b></p>
+                    <p style="font-size: 12px; color: #94a3b8;">NIM. 2210131210010</p>
+
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 10px;">Metode</h4>
+                        <p style="font-size: 12px; color: #64748b; line-height: 1.6;">
+                            Aplikasi ini menggunakan <b>Algoritma Greedy</b> untuk optimalisasi rute dan <b>Haversine
+                                Formula</b> untuk perhitungan jarak akurat.
+                        </p>
+                    </div>
+                    <button onclick="closeInfoModal()" class="btn btn-primary"
+                        style="width: 100%; margin-top: 25px; padding: 12px; border-radius: 12px;">Tutup</button>
+                </div>
+            </div>
         </div>
-    </div>
-    <div id="custom-modal-overlay" class="modal-overlay" style="display: none; z-index: 10000;">
-        <div class="modal-content"
-            style="background: white; width: 90%; max-width: 320px; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+
+        <div id="customToast" class="toast-notification">
+            <div class="toast-icon">✨</div>
+            <div class="toast-message">
+                <h4 id="toastTitle">Berhasil!</h4>
+                <p id="toastBody">Pesan notifikasi.</p>
+            </div>
         </div>
-    </div>
+        <div id="custom-modal-overlay" class="modal-overlay" style="display: none; z-index: 10000;">
+            <div class="modal-content"
+                style="background: white; width: 90%; max-width: 320px; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            </div>
+        </div>
 
-    <!-- LEAFLET -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
+        <!-- LEAFLET -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
 
-    <!-- DATA DARI BACKEND -->
-    <script>
-        window.wisataData = @json(isset($hasil) ? $hasil : null);
-        window.wisataLainData = @json(isset($wisata_lain) ? $wisata_lain : null);
-        window.allWisataData = @json($semua_wisata ?? []);
-        window.realSisaBudget = @json(isset($sisa_budget) ? $sisa_budget : request('budget') ?? 0);
-    </script>
+        <!-- DATA DARI BACKEND -->
+        <script>
+            window.wisataData = @json(isset($hasil) ? $hasil : null);
+            window.wisataLainData = @json(isset($wisata_lain) ? $wisata_lain : null);
+            window.allWisataData = @json($semua_wisata ?? []);
+            window.realSisaBudget = @json(isset($sisa_budget) ? $sisa_budget : request('budget') ?? 0);
+        </script>
 
-    <!-- CORE & FEATURES -->
-    <script src="{{ asset('js/core/state.js') }}"></script>
-    <script src="{{ asset('js/core/utils.js') }}"></script>
-    <script src="{{ asset('js/core/map-init.js') }}"></script>
-    <script src="{{ asset('js/features/route.js') }}"></script>
-    <script src="{{ asset('js/features/nearby.js') }}"></script>
-    <script src="{{ asset('js/features/geojson.js') }}"></script>
-    <script src="{{ asset('js/features/detail-panel.js') }}"></script>
+        <!-- CORE & FEATURES -->
+        <script src="{{ asset('js/core/state.js') }}"></script>
+        <script src="{{ asset('js/core/utils.js') }}"></script>
+        <script src="{{ asset('js/core/map-init.js') }}"></script>
+        <script src="{{ asset('js/features/route.js') }}"></script>
+        <script src="{{ asset('js/features/nearby.js') }}"></script>
+        <script src="{{ asset('js/features/geojson.js') }}"></script>
+        <script src="{{ asset('js/features/detail-panel.js') }}"></script>
 
-    <!-- UI -->
-    <script src="{{ asset('js/ui/toast.js') }}"></script>
-    <script src="{{ asset('js/ui/modal.js') }}"></script>
-    <script src="{{ asset('js/ui/directory-ui.js') }}"></script>
+        <!-- UI -->
+        <script src="{{ asset('js/ui/toast.js') }}"></script>
+        <script src="{{ asset('js/ui/modal.js') }}"></script>
+        <script src="{{ asset('js/ui/directory-ui.js') }}"></script>
 
-    <!-- OPTIONAL PAGE INIT -->
-    <script src="{{ asset('js/ui/page-init.js') }}"></script>
+        <!-- OPTIONAL PAGE INIT -->
+        <script src="{{ asset('js/ui/page-init.js') }}"></script>
 
 </body>
 

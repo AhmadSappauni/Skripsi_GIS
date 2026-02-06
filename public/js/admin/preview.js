@@ -2,7 +2,13 @@ window.updatePreview = function () {
     
     // 1. AMBIL DATA
     const nama = document.getElementById('namaTempat')?.value.trim();
-    const hargaVal = document.getElementById('hargaTiket')?.value;
+    
+    // --- PERUBAHAN DI SINI ---
+    // Mengambil value dari ID 'hargaReal' (input hidden), bukan 'hargaTiket' lagi
+    // Jika hargaReal tidak ketemu (misal belum ketik), default ke '0'
+    const hargaVal = document.getElementById('hargaReal')?.value || '0'; 
+    // -------------------------
+
     const alamat = document.getElementById('alamatInp')?.value.trim();
     const kategoriEl = document.querySelector('input[name="kategori"]:checked');
     const kategori = kategoriEl ? kategoriEl.value : '';
@@ -33,10 +39,15 @@ window.updatePreview = function () {
 
     // 3. TAMPILKAN
     previewBox.style.display = 'block';
+    
+    // Reset animasi biar nge-blink kalau ada update
+    previewBox.style.animation = 'none';
+    previewBox.offsetHeight; /* trigger reflow */
     previewBox.style.animation = 'fadeInUp 0.5s ease-out';
 
     // Format Harga
     let hargaText = 'Gratis';
+    // Kita parse int dari string murni (misal "10000"), lalu format jadi "10.000"
     if (hargaVal && parseInt(hargaVal) > 0) {
         hargaText = 'Rp ' + parseInt(hargaVal).toLocaleString('id-ID');
     }
@@ -44,13 +55,13 @@ window.updatePreview = function () {
     // Helper Function
     function safeSetText(id, value) {
         const el = document.getElementById(id);
-        if (el) el.innerHTML = value; // Pakai innerHTML biar bisa kasih warna/bold jika perlu
+        if (el) el.innerHTML = value; 
     }
 
-    // Isi Data
+    // Isi Data ke Preview Box
     safeSetText('pvNama', nama);
     safeSetText('pvKategori', kategori);
     safeSetText('pvHarga', hargaText);
-    safeSetText('pvJam', jamText); // Data Baru
+    safeSetText('pvJam', jamText);
     safeSetText('pvAlamat', alamat);
 };

@@ -64,46 +64,65 @@ class AdminController extends Controller
     // 3. PROSES SIMPAN (STORE) - PERBAIKAN LOGIKA GAMBAR
     public function store(Request $request)
     {
+        // 1. Validasi gambar_file.* (artinya setiap file di array harus gambar)
         $request->validate([
             'nama_tempat' => 'required|string',
             'kategori'    => 'required|string',
             'latitude'    => 'required',
             'longitude'   => 'required',
-            'hari_buka'   => 'required|array',
-            'gambar_file' => 'nullable|image|max:2048',
-            'gambar_url'  => 'nullable|url',
+            'gambar_file.*' => 'image|max:2048', // Validasi tiap file
         ]);
 
-        $finalGambar = null;
+        $galeriPaths = [];
+        $thumbnail = null; // Ini untuk kolom 'gambar' (foto utama)
 
-        // PRIORITAS 1: Upload file
+        // 2. PROSES UPLOAD BANYAK FILE
         if ($request->hasFile('gambar_file')) {
-            $file = $request->file('gambar_file');
-            $filename = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/wisata'), $filename);
+            foreach($request->file('gambar_file') as $index => $file) {
+                $filename = time() . '_' . $index . '_' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/wisata'), $filename);
+                
+                // Simpan path lengkap
+                $path = 'uploads/wisata/' . $filename;
+                $galeriPaths[] = $path;
 
-            $finalGambar = 'uploads/wisata/' . $filename;
-        }
-        // PRIORITAS 2: URL
+                // Foto pertama jadi thumbnail utama
+                if ($index === 0) {
+                    $thumbnail = $path;
+                }
+            }
+        } 
+        // Jika pakai URL
         elseif ($request->filled('gambar_url')) {
-            $finalGambar = $request->gambar_url;
+            $thumbnail = $request->gambar_url;
+            $galeriPaths[] = $request->gambar_url;
         }
 
-        $jamBuka = $request->has('is_24_jam')
-            ? '24 Jam'
+        // Default jika kosong
+        if (!$thumbnail) {
+            $thumbnail = 'images/placeholder.jpg'; // Pastikan file ini ada atau ganti link
+        }
+
+        // 3. Logic Jam Buka
+        $jamBuka = $request->has('is_24_jam') 
+            ? '24 Jam' 
             : ($request->jam_buka . ' - ' . $request->jam_tutup . ' WITA');
 
+        // 4. SIMPAN KE DATABASE
         Wisata::create([
             'nama_tempat' => $request->nama_tempat,
             'harga_tiket' => $request->harga_tiket ?? 0,
             'kategori'    => $request->kategori,
             'deskripsi'   => $request->deskripsi ?? '',
-            'gambar'      => $finalGambar, // PATH / URL
+            'alamat'      => $request->alamat ?? '',
             'latitude'    => $request->latitude,
             'longitude'   => $request->longitude,
-            'alamat'      => $request->alamat ?? '',
-            'hari_buka'   => implode(',', $request->hari_buka),
+            'hari_buka'   => implode(',', $request->hari_buka ?? []),
             'jam_buka'    => $jamBuka,
+            'fasilitas' => $request->fasilitas ?? [],
+            'gambar'      => $thumbnail,        // String (Foto ke-1)
+            'galeri'      => $galeriPaths,      // Array/JSON (Semua foto)
+            
         ]);
 
         return redirect()->route('admin.index')->with('sukses', 'Data wisata berhasil disimpan!');
@@ -131,8 +150,8 @@ class AdminController extends Controller
             'gambar_url'  => 'nullable|url',
         ]);
 
-        $finalGambar = $wisata->gambar; 
-        
+        $finalGambar = $wisata->gambar;
+
         if ($request->hasFile('gambar_file')) {
 
             // Hapus gambar lama jika file lokal
@@ -167,7 +186,9 @@ class AdminController extends Controller
             'alamat'      => $request->alamat,
             'hari_buka'   => implode(',', $request->hari_buka),
             'jam_buka'    => $jamBuka,
+            'fasilitas' => $request->fasilitas ?? [],
             'gambar'      => $finalGambar,
+            
         ]);
 
         return redirect()->route('admin.index')->with('sukses', 'Data berhasil diperbarui!');
@@ -179,8 +200,7 @@ class AdminController extends Controller
         $wisata = Wisata::find($id);
 
         if ($wisata) {
-            // Hapus file fisik jika ada di folder images
-            if ($wisata->gambar && File::exists(public_path($wisata->gambar))) {
+            if ($wisata->gambar && !Str::startsWith($wisata->gambar, ['http', 'https']) && File::exists(public_path($wisata->gambar))) {
                 File::delete(public_path($wisata->gambar));
             }
 

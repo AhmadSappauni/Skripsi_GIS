@@ -57,3 +57,5 @@ Route::put('/admin/update/{id}', [AdminController::class, 'update'])->name('admi
 // Delete (PERBAIKAN PENTING DI SINI)
 // Wajib pakai 'delete', bukan 'get'. Dan namanya 'admin.destroy'
 Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+
+Route::post('/review/store', [App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');

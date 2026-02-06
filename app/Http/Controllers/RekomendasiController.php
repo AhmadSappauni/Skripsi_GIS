@@ -9,7 +9,11 @@ class RekomendasiController extends Controller
 {
     public function cari(Request $request)
     {
-        $allWisata = Wisata::all(); 
+        $allWisata = Wisata::with('reviews')->get(); 
+        foreach($allWisata as $w) {
+            $w->rata_rata = $w->reviews->avg('rating') ?? 0;
+            $w->jumlah_ulasan = $w->reviews->count();
+        }
 
         if ($request->filled('lat') && $request->input('action') === 'cari_rute') {
             // 1. INPUT DASAR
