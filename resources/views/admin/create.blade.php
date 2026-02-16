@@ -14,21 +14,7 @@
 
 <body class="admin-layout">
 
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="brand-logo">Smart<span>Admin</span></div>
-        </div>
-        <ul class="sidebar-menu">
-            <li class="menu-label">Menu Utama</li>
-            <li><a href="{{ route('admin.index') }}" class="menu-link"><i class="ri-dashboard-3-line icon"></i>
-                    Dashboard</a></li>
-            <li><a href="{{ route('admin.create') }}" class="menu-link active"><i class="ri-add-circle-line icon"></i>
-                    Tambah Wisata</a></li>
-            <li class="menu-label">Pengaturan</li>
-            <li><a href="/" target="_blank" class="menu-link"><i class="ri-global-line icon"></i> Lihat
-                    Website</a></li>
-        </ul>
-    </aside>
+    @include('admin.components_admin.sidebar')
 
     <main class="main-content">
 
@@ -138,34 +124,6 @@
                         <label class="form-label">Deskripsi Singkat</label>
                         <textarea name="deskripsi" class="form-input" rows="3" placeholder="Jelaskan daya tarik tempat ini..."></textarea>
                     </div>
-
-                    <div class="panel-divider"></div>
-
-                        <div class="rating-box">
-                            <h4 style="font-size:14px; margin-bottom:10px;">Beri Ulasan</h4>
-                            
-                            <form id="formReview" onsubmit="submitReview(event)">
-                                <input type="hidden" id="reviewWisataId" name="wisata_id">
-                                
-                                <div class="star-rating">
-                                    <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
-                                    <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
-                                    <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
-                                    <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
-                                    <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
-                                </div>
-
-                                <textarea name="komentar" id="reviewKomentar" rows="2" class="form-input" 
-                                        placeholder="Tulis pengalamanmu..." style="margin-top:10px; font-size:13px;"></textarea>
-                                
-                                <button type="submit" class="btn-rute-hero" style="margin-top:10px; background:#1e293b; width:100%;">
-                                    Kirim Ulasan
-                                </button>
-                            </form>
-                        </div>
-
-                        <div id="reviewContainer" class="review-list">
-                            </div>
                     
                 </div>
 

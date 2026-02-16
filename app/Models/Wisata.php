@@ -24,5 +24,8 @@ class Wisata extends Model
     {
         return $this->hasMany(Review::class)->latest(); 
     }
+    public function visitedBy() {
+        return $this->belongsToMany(User::class, 'user_wisata', 'wisata_id', 'user_id');
+    }
 }
 

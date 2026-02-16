@@ -1,0 +1,77 @@
+/* Style Tambahan Khusus Halaman Ini */
+:root {
+    --primary: #4f46e5;
+    --bg-gray: #f8fafc;
+    --text-dark: #1e293b;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    background: var(--bg-gray);
+    margin: 0;
+}
+
+/* Layout Fix jika CSS utama belum load sempurna */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+.main-content {
+    flex: 1;
+    margin-left: 260px; /* Sesuaikan lebar sidebar */
+    background: #f8fafc;
+}
+
+.content-wrapper {
+    padding: 30px;
+}
+
+.top-header {
+    background: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Di dalam <style> */
+.chart-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    margin-bottom: 25px;
+
+    /* --- TAMBAHKAN INI (Wajib!) --- */
+    min-width: 0;
+    /* Ini mencegah Chart mendorong layout saat resize */
+}
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.chart-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.grid-charts {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0; /* Hilangkan margin di layar kecil/sempit */
+        padding-top: 80px; /* Beri jarak kalau header tertutup */
+    }
+    .grid-charts {
+        grid-template-columns: 1fr; /* Paksa jadi 1 kolom */
+    }
+}

@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RekomendasiController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\VisitedController;
+use App\Http\Controllers\RekomendasiController;
 
 // ====================================================
 // 1. LANDING PAGE (Halaman Depan)
@@ -59,3 +61,10 @@ Route::put('/admin/update/{id}', [AdminController::class, 'update'])->name('admi
 Route::delete('/admin/delete/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
 
 Route::post('/review/store', [App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
+
+Route::post('/visit/toggle/{id}', [VisitedController::class, 'toggle']);
+// Route Simpan Catatan (POST)
+Route::post('/visit/save-note/{id}', [VisitedController::class, 'saveNote']);
+Route::get('/visit/get-data', [VisitedController::class, 'getVisitedData']);
+
+Route::get('/admin/statistik', [AdminController::class, 'stats'])->name('admin.stats');

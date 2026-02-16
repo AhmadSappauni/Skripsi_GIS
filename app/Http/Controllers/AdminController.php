@@ -5,12 +5,76 @@ namespace App\Http\Controllers;
 use App\Models\Wisata;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File; // Penting untuk hapus file
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    // 1. TAMPILKAN DASHBOARD
-    // 1. TAMPILKAN DASHBOARD (SEARCH & ADVANCED FILTER)
+    public function stats()
+    {
+        $kategoriStats = Wisata::select('kategori', DB::raw('count(*) as total'))
+                        ->groupBy('kategori')->pluck('total', 'kategori');
+
+        $topWisataStats = Wisata::withCount('visitedBy')->orderByDesc('visited_by_count')->take(10)->get();
+        $topWisataLabels = $topWisataStats->pluck('nama_tempat');
+        $topWisataData   = $topWisataStats->pluck('visited_by_count');
+        
+        $wilayahList = ['Banjarmasin', 'Banjarbaru', 'Martapura', 'Tanah Laut', 'Barito Kuala'];
+    
+        // 2. Siapkan Array Wadah
+        $statsPerKota = [];
+
+        // --- [BARU] TAMBAHKAN "SEMUA WILAYAH" DI URUTAN PERTAMA ---
+        // Ini menghitung Top 10 dari SELURUH database tanpa filter alamat
+        $globalTop = Wisata::withCount('visitedBy')
+                        ->orderByDesc('visited_by_count')
+                        ->take(10)
+                        ->get();
+
+        $statsPerKota['Semua Wilayah'] = [
+            'labels' => $globalTop->pluck('nama_tempat'),
+            'data'   => $globalTop->pluck('visited_by_count')
+        ];
+        // -----------------------------------------------------------
+
+        // 3. Loop Wilayah Spesifik
+        $wilayahLabels = []; 
+        $dataJumlahWisata = []; 
+        $dataJumlahKunjungan = []; 
+
+        foreach ($wilayahList as $wilayah) {
+            $keyKota = $wilayah == 'Martapura' ? 'Kab. Banjar' : $wilayah;
+            $wilayahLabels[] = $keyKota;
+
+            // A. Hitung Statistik Umum (Supply vs Demand)
+            $dataJumlahWisata[] = Wisata::where('alamat', 'like', "%$wilayah%")->count();
+            
+            $dataJumlahKunjungan[] = Wisata::where('alamat', 'like', "%$wilayah%")
+                            ->withCount('visitedBy')
+                            ->get()
+                            ->sum('visited_by_count');
+
+            // B. Hitung Top 10 Per Kota
+            $topList = Wisata::where('alamat', 'like', "%$wilayah%")
+                        ->withCount('visitedBy')
+                        ->orderByDesc('visited_by_count')
+                        ->take(10)
+                        ->get();
+
+            // Masukkan ke array statsPerKota (Setelah "Semua Wilayah")
+            $statsPerKota[$keyKota] = [
+                'labels' => $topList->pluck('nama_tempat'),
+                'data'   => $topList->pluck('visited_by_count')
+            ];
+        }
+
+        return view('admin.statistik', compact(
+            // Variable lama (kategori, dll) pastikan tetap ada
+            'kategoriStats', 'topWisataLabels', 'topWisataData', 
+            // Variable baru
+            'wilayahLabels', 'dataJumlahWisata', 'dataJumlahKunjungan', 'statsPerKota'
+        ));
+    }
     public function index(Request $request)
     {
         $query = Wisata::query();

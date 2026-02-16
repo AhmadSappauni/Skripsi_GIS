@@ -1,18 +1,113 @@
-.btn {
-    border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s;
-    width: 100%;
+
+/* =========================================
+   2. SIDEBAR (MENU KIRI)
+   ========================================= */
+.floating-sidebar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 380px; 
+    bottom: 20px; /* Agar tinggi menyesuaikan layar */
+    z-index: 1000;
+
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    overflow: hidden; 
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease;
+}
+
+.sidebar-closed {
+    transform: translateX(-150%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Header Sidebar */
+.sidebar-header {
+    padding: 25px 30px 15px 30px; 
+    background: white; 
+    z-index: 20; 
+    border-bottom: 1px solid #f1f5f9;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+
+.sidebar-header h2 {
+    font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1.2;
+}
+.sidebar-header span { color: var(--primary); }
+
+/* Area Scroll Sidebar */
+.sidebar-scroll-area {
+    overflow-y: auto; 
+    flex-grow: 1; 
+    padding: 20px; 
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Style Scrollbar Custom */
+.sidebar-scroll-area::-webkit-scrollbar { width: 6px; }
+.sidebar-scroll-area::-webkit-scrollbar-track { background: transparent; }
+.sidebar-scroll-area::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+
+/* Tombol Bulat di Header */
+.btn-info-header {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: var(--text-dark);
+    border: 1px solid #e2e8f0;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.3s;
+}
+.btn-info-header:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* =========================================
+   3. FORM & INPUT STYLES
+   ========================================= */
+.form-group { margin-bottom: 20px; }
+
+.form-label {
+    display: block; font-size: 11px; font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;
+}
+
+.form-input, .form-select {
+    width: 100%; padding: 12px 16px;
+    border: 2px solid #f1f5f9; border-radius: 12px;
+    background: #f8fafc; font-size: 14px; font-weight: 500; color: var(--text-dark);
+    transition: all 0.2s ease; outline: none;
+}
+
+.form-input:focus, .form-select:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+/* Tombol Utama */
+.btn {
+    border: none; padding: 12px 20px; border-radius: 12px;
+    cursor: pointer; font-weight: 600; font-size: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;
 }
 
 .btn-primary {
@@ -26,283 +121,241 @@
 }
 
 .btn-outline {
-    background: white;
-    border: 2px dashed #cbd5e1;
-    color: var(--text-light);
+    background: white; border: 2px dashed #cbd5e1; color: var(--text-light);
 }
 .btn-outline:hover {
-    border-color: #ef4444;
-    color: #ef4444;
-    background: #fef2f2;
+    border-color: #ef4444; color: #ef4444; background: #fef2f2;
 }
 
-.btn-modern {
-    border: none;
-    border-radius: 6px;
-    padding: 8px;
-    font-size: 11px;
-    font-weight: 600;
+/* =========================================
+   4. HASIL PENCARIAN (LIST DI SIDEBAR)
+   ========================================= */
+.result-summary {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white; padding: 15px; border-radius: 16px; margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.wisata-list { list-style: none; }
+
+.wisata-item {
+    background: white; border-radius: 16px; padding: 12px; margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid transparent;
+    cursor: pointer; transition: all 0.2s;
+}
+.wisata-item-modern {
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    background: #ffffff;
+}
+
+
+.wisata-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: var(--primary);
+}
+
+.wisata-img {
+    width: 60px; height: 60px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
+}
+
+.badge-clean { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+.badge-clean.primary { background: #e0e7ff; color: var(--primary); }
+.badge-clean.success { background: #dcfce7; color: #166534; }
+
+/* =========================================
+   5. CUSTOM DROPDOWN
+   ========================================= */
+.custom-dropdown { position: relative; width: 100%; }
+
+.dropdown-selected {
+    display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    padding: 12px 16px; border: 2px solid #f1f5f9; background: #f8fafc; border-radius: 12px; height: 48px;
+}
+
+.dropdown-options {
+    display: none; position: absolute; top: 105%; left: 0; width: 100%; background: white;
+    border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+    z-index: 999; max-height: 250px; overflow-y: auto; padding: 5px;
+}
+.custom-dropdown.active .dropdown-options { display: block; animation: fadeInDown 0.2s ease-out; }
+
+.dropdown-item { padding: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 8px; transition: 0.2s; }
+.dropdown-item:hover { background: #eef2ff; }
+.dropdown-item img, .selected-content img { width: 24px; height: 24px; object-fit: contain; }
+.dropdown-item input { display: none; }
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* =========================================
+   STYLE POPUP WILAYAH (CUSTOM BADGE)
+   ========================================= */
+
+/* 1. Hilangkan gaya default kotak Leaflet */
+.region-popup .leaflet-popup-content-wrapper {
+    background: rgba(255, 255, 255, 0.95); /* Putih semi-transparan */
+    backdrop-filter: blur(4px); /* Efek kaca buram */
+    border-radius: 50px; /* Bentuk Kapsul/Pill */
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.25); /* Bayangan Ungu Halus */
+    border: 2px solid #e0e7ff; /* Border ungu sangat muda */
     text-align: center;
-    text-decoration: none;
-    width: 100%;
-    transition: 0.2s;
-}
-.btn-blue-soft {
-    background: #e0e7ff;
-    color: var(--primary);
-}
-.btn-blue-soft:hover {
-    background: #c7d2fe;
-}
-.btn-orange-soft {
-    background: #ffedd5;
-    color: #c2410c;
-}
-.btn-orange-soft:hover {
-    background: #fed7aa;
-}
-.btn-indigo-outline {
-    background: white;
-    border: 1px solid var(--primary);
-    color: var(--primary);
-}
-.btn-indigo-outline:hover {
-    background: #eef2ff;
-}
-.btn-red-solid {
-    background: #ef4444;
-    color: white;
-}
-.btn-red-solid:hover {
-    background: #dc2626;
 }
 
-.btn-filter-toggle {
-    padding: 12px 24px;
-    background: white;
+/* 2. Styling Teks di dalamnya */
+.region-popup .leaflet-popup-content {
+    margin: 8px 24px !important; /* Padding kanan-kiri lebih lebar */
+    width: auto !important;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 700; /* Bold */
+    color: #4f46e5; /* Warna Ungu Tema */
+    text-transform: uppercase; /* Huruf Kapital Semua */
+    letter-spacing: 1.5px; /* Jarak antar huruf */
+}
+
+/* 3. Warnai Segitiga Penunjuk (Tip) */
+.region-popup .leaflet-popup-tip {
+    background: #e0e7ff; /* Samakan dengan warna border */
+    box-shadow: none;
+}
+
+/* 4. Hilangkan tombol Close (X) bawaan jika masih ada */
+.region-popup .leaflet-popup-close-button {
+    display: none;
+}
+
+/* =========================================
+   ARAH MATA ANGIN (COMPASS)
+   ========================================= */
+.compass-control {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    
+    /* Atur Jarak agar pas di bawah/samping tombol Layer */
+    margin-top: 10px !important;   
+    margin-right: 12px !important; 
+    
+    /* Reset margin lama */
+    margin-bottom: 0 !important; 
+    margin-left: 0 !important;   
+}
+
+.compass-control img {
+    width: 100px;  /* Ukuran sedikit diperkecil agar pas */
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    opacity: 0.9;
+    transition: transform 0.3s ease;
+}
+
+.compass-control img:hover {
+    transform: scale(1.5);
+    opacity: 1;
+    cursor: help;
+}
+
+/* --- CUSTOM POPUP STYLE (USER LOCATION) --- */
+
+/* 1. Hilangkan Style Bawaan Leaflet yang Kaku */
+.custom-user-popup .leaflet-popup-content-wrapper {
+    background: transparent; /* Transparan, kita atur sendiri */
+    box-shadow: none;        /* Hapus bayangan bawaan */
+    padding: 0;
+}
+.custom-user-popup .leaflet-popup-tip {
+    background: #1e293b; /* Warna panah bawah jadi gelap/elegan */
+}
+.custom-user-popup .leaflet-popup-content {
+    margin: 0; /* Reset margin bawaan */
+    width: 200px !important;
+}
+
+/* 2. Container Utama */
+.user-popup-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     border: 1px solid #e2e8f0;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-dark);
-    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif; /* Sesuaikan font web kamu */
+}
+
+/* 3. Header dengan Animasi Pulse */
+.user-popup-header {
+    background: #1e293b; /* Warna Slate Gelap (Premium) */
+    padding: 10px 14px;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s;
-    white-space: nowrap;
 }
 
-.btn-filter-toggle:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-}
-.btn-filter-toggle.active {
-    background: #eef2ff;
-    color: var(--primary);
-    border-color: var(--primary);
-}
-
-.btn-close-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: #f8fafc;
-    color: #64748b;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    transition: all 0.2s ease;
-}
-.btn-close-circle:hover {
-    background: #fee2e2;
-    color: #ef4444;
-    transform: rotate(90deg) scale(1.1);
-}
-
-.btn-detail-corner {
-    position: absolute;
-    bottom: 8px;
-    right: 8px; /* Pojok kanan bawah */
-
-    width: 32px;
-    height: 32px;
-    background: rgba(255, 255, 255, 0.95); /* Putih agak transparan */
-    color: var(--primary); /* Warna ungu tema */
-    border-radius: 50%; /* Bentuk bulat */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Shadow sedikit dipertegas biar kelihatan di atas gambar terang */
-    z-index: 10; /* Pastikan di atas gambar */
-    transition: all 0.2s ease;
-    border: 1px solid #eef2ff;
-}
-
-/* Efek Hover */
-.btn-detail-corner:hover {
-    background: var(--primary);
-    color: white;
-    transform: scale(1.1); /* Efek membesar sedikit saat disorot */
-    border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); /* Tambah glow ungu saat hover */
-}
-
-.badge-clean {
-    font-size: 10px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: 700;
-}
-.badge-clean.primary {
-    background: #e0e7ff;
-    color: var(--primary);
-}
-.badge-clean.success {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.dir-badge-category {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    z-index: 5;
-
-    background: rgba(255, 255, 255, 0.95);
-    color: var(--primary);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 10px;
+.user-popup-title {
+    color: #f8fafc;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(4px);
+    letter-spacing: 0.5px;
 }
 
-.dir-card {
-    background: #ffffff;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid transparent;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    display: flex;
-    flex-direction: column;
-
-    /* 🔑 INI KUNCI UTAMA */
-    min-height: 300px;
-
-    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    position: relative;
-}
-
-.dir-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.12);
-    border-color: rgba(99, 102, 241, 0.3);
-}
-
-.toast-notification {
-    position: fixed;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 15px 25px;
-    border-radius: 50px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    z-index: 10000;
-    transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    border: 1px solid #f1f5f9;
-}
-.toast-notification.show {
-    top: 30px;
-}
-.toast-icon {
-    font-size: 20px;
-    background: #fef2f2;
-    width: 40px;
-    height: 40px;
+/* Animasi Titik Berkedip (Live) */
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #22c55e; /* Hijau */
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #fee2e2;
-}
-.toast-message h4 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 700;
-    color: #dc2626;
-}
-.toast-message p {
-    margin: 2px 0 0 0;
-    font-size: 12px;
-    color: var(--text-light);
+    box-shadow: 0 0 0 rgba(34, 197, 94, 0.7);
+    animation: pulse-green 2s infinite;
 }
 
-.cm-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(2px);
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 }
 
-/* Kotak Modal */
-.cm-box {
+/* 4. Body Content */
+.user-popup-body {
+    padding: 12px 14px;
     background: white;
-    width: 90%;
-    max-width: 450px;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    animation: slideUp 0.3s ease-out;
 }
 
-/* Tombol Modal (INI YANG HILANG DI SCREENSHOT KAMU) */
-.cm-btn {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 0.95rem;
-}
-
-/* Tombol Batal (Abu-abu) */
-.cm-btn-cancel {
-    background: #f1f5f9;
+.user-popup-body p {
+    margin: 0;
+    font-size: 12px;
     color: #64748b;
-}
-.cm-btn-cancel:hover {
-    background: #e2e8f0;
+    line-height: 1.4;
+    margin-bottom: 8px;
 }
 
-/* Tombol Aksi (Merah/Biru) */
-.cm-btn-confirm {
-    background: #ef4444;
-    color: white;
+/* Hint Geser (Drag) */
+.drag-hint {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4f46e5; /* Ungu Indigo */
+    background: #eef2ff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    width: fit-content;
 }
-.cm-btn-confirm:hover {
-    background: #dc2626;
+
+.drag-hint i {
+    font-size: 12px;
 }

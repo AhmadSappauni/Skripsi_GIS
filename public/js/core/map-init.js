@@ -9,20 +9,57 @@ window.getLocation = function() {
 function showPosition(position) {
     var lat = position.coords.latitude;
     var long = position.coords.longitude;
+    
     localStorage.setItem('userLat', lat);
     localStorage.setItem('userLong', long);
     getAddress(lat, long); 
     
     if(map) map.flyTo([lat, long], 16, { animate: true, duration: 2 });
-    if (userMarker) map.removeLayer(userMarker);
-    if (userCircle) map.removeLayer(userCircle);
     
-    userCircle = L.circle([lat, long], { color: '#dc2626', fillColor: '#ef4444', fillOpacity: 0.2, radius: 100 }).addTo(map);
+    // Hapus marker lama jika ada
+    if (typeof userMarker !== 'undefined' && userMarker) map.removeLayer(userMarker);
+    if (typeof userCircle !== 'undefined' && userCircle) map.removeLayer(userCircle);
+    
+    // Buat Lingkaran Area
+    userCircle = L.circle([lat, long], { 
+        color: '#f16363',      // Warna garis ungu modern
+        fillColor: '#ff0000',  // Warna isi ungu muda
+        fillOpacity: 0.15, 
+        weight: 1,
+        radius: 100 
+    }).addTo(map);
+
+    // --- POPUP KEREN (CUSTOM HTML) ---
+    const popupContent = `
+        <div class="user-popup-container">
+            <div class="user-popup-header">
+                <div class="pulse-dot"></div>
+                <span class="user-popup-title">Lokasi Kamu Saat Ini</span>
+            </div>
+            <div class="user-popup-body">
+                <p>Titik awal perjalananmu.</p>
+                <div class="drag-hint">
+                    <i class="ri-drag-move-2-line"></i> Geser pin untuk ubah
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Buat Marker
     userMarker = L.marker([lat, long], { icon: redIcon, draggable: true }).addTo(map)
-        .bindPopup("<b> Lokasi Kamu</b><br>Geser untuk ubah posisi!").openPopup();
+        .bindPopup(popupContent, {
+            className: 'custom-user-popup', // Class khusus untuk styling CSS
+            closeButton: false,            // Hilangkan tombol X bawaan yang jelek
+            autoClose: false,
+            closeOnClick: false
+        })
+        .openPopup();
     
+    // Event Drag
     userMarker.on('dragend', function(e) {
         var pos = userMarker.getLatLng();
+        // Update posisi lingkaran juga saat marker digeser
+        userCircle.setLatLng(pos);
         getAddress(pos.lat, pos.lng); 
     });
 }
@@ -59,41 +96,52 @@ function getAddress(lat, lng) {
 }
 
 function showError(error) { console.log(error); } 
+// --- 1. DEKLARASI GLOBAL (Agar bisa diakses fungsi switchBaseMap) ---
+var map;
+var streetLayer, satelliteLayer, terrainLayer;
+var currentBaseLayer; 
 
 document.addEventListener("DOMContentLoaded", function() {
     var startLat = parseFloat(document.getElementById("inputLat").value) || -3.440974;
     var startLong = parseFloat(document.getElementById("inputLong").value) || 114.833500;
 
-    var streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' });
-    var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles © Esri' });
-    var terrainLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' });
+    // --- 2. INISIALISASI LAYER (Di dalam DOMContentLoaded) ---
+    streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' });
+    satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles © Esri' });
+    terrainLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' });
 
+    // Cek LocalStorage
     var savedMap = localStorage.getItem('selectedMap');
-    var activeLayer = streetLayer;
-    if (savedMap === ' Satelit') activeLayer = satelliteLayer;
-    else if (savedMap === ' Terrain') activeLayer = terrainLayer;
+    
+    // Tentukan layer awal
+    if (savedMap === 'satellite') {
+        currentBaseLayer = satelliteLayer;
+    } else if (savedMap === 'terrain') {
+        currentBaseLayer = terrainLayer;
+    } else {
+        currentBaseLayer = streetLayer; // Default
+    }
 
-    map = L.map('map', { center: [startLat, startLong], zoom: 12, zoomControl: false, layers: [activeLayer] });
+    // Buat Map
+    map = L.map('map', { 
+        center: [startLat, startLong], 
+        zoom: 12, 
+        zoomControl: false, 
+        layers: [currentBaseLayer] 
+    });
+
     focusLayer = L.layerGroup().addTo(map);
 
-    // Kompas
-    var CompassControl = L.Control.extend({
-        options: { position: 'topright' },
-        onAdd: function () {
-            var div = L.DomUtil.create('div', 'compass-control');
-            div.innerHTML = '<img src="/icons/Logo Kompas.png" alt="Utara" style="width:40px; opacity:0.9;">'; 
-            return div;
-        }
-    });
+    // ... (Kode Kompas & Zoom Control kamu tetap sama) ...
+    var CompassControl = L.Control.extend({ options: { position: 'topright' }, onAdd: function () { var div = L.DomUtil.create('div', 'compass-control'); div.innerHTML = '<img src="/icons/Logo Kompas.png" alt="Utara" style="width:40px; opacity:0.9;">'; return div; } });
     map.addControl(new CompassControl());
-    
     L.control.zoom({ position: 'bottomright' }).addTo(map);
-    var baseMaps = { " Peta Jalan": streetLayer, " Satelit": satelliteLayer, " Terrain": terrainLayer };
-    L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
 
-    map.on('baselayerchange', function(e) { localStorage.setItem('selectedMap', e.name); });
-    map.createPane('areaPolygon'); map.getPane('areaPolygon').style.zIndex = 350; 
+    // Pane Polygon
+    map.createPane('areaPolygon'); 
+    map.getPane('areaPolygon').style.zIndex = 350; 
 
+    // Marker User
     if(document.getElementById("inputLat").value !== "") {
         userMarker = L.marker([startLat, startLong], { icon: redIcon, draggable: true }).addTo(map);
         getAddress(startLat, startLong);
@@ -103,7 +151,29 @@ document.addEventListener("DOMContentLoaded", function() {
     renderRoute(startLat, startLong);
     loadGeoJSON();
     
-    // Auto show info for first visitor
+    // Info Modal
     var hasSeenInfo = localStorage.getItem('hasSeenInfo');
     if (!hasSeenInfo) { setTimeout(function() { openInfoModal(); }, 1000); localStorage.setItem('hasSeenInfo', 'true'); }
 });
+
+// --- 3. FUNGSI GANTI BASE MAP (Di Luar DOMContentLoaded) ---
+window.switchBaseMap = function(type) {
+    // Hapus layer lama
+    if (currentBaseLayer) {
+        map.removeLayer(currentBaseLayer);
+    }
+
+    // Pilih layer baru
+    if (type === 'street') {
+        currentBaseLayer = streetLayer;
+    } else if (type === 'satellite') {
+        currentBaseLayer = satelliteLayer;
+    } else if (type === 'terrain') {
+        currentBaseLayer = terrainLayer;
+    }
+
+    // Tambahkan layer baru & Simpan preferensi
+    map.addLayer(currentBaseLayer);
+    currentBaseLayer.bringToBack(); // Pastikan ada di belakang polygon
+    localStorage.setItem('selectedMap', type);
+};

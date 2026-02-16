@@ -1,0 +1,191 @@
+/* =========================================
+   4. RATING & REVIEW (Fixed Style)
+   ========================================= */
+.rating-box {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 16px; padding: 20px; margin-top: 10px;
+}
+
+.star-rating {
+    display: flex; flex-direction: row-reverse; justify-content: center;
+    gap: 8px; margin: 10px 0;
+}
+/* Hilangkan Radio Button Jelek */
+.star-rating input { display: none !important; }
+
+.star-rating label {
+    font-size: 28px; color: #cbd5e1; cursor: pointer; transition: 0.2s;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f59e0b;
+}
+
+.review-list { margin-top: 20px; }
+.review-item { border-bottom: 1px solid #f1f5f9; padding: 12px 0; }
+.review-user { font-weight: 700; font-size: 13px; color: #1e293b; }
+.review-text { font-size: 13px; color: #64748b; margin-top: 4px; line-height: 1.5; }
+.review-star { color: #f59e0b; font-size: 12px; float: right; }
+
+/* --- PREMIUM SELECT BOX --- */
+.premium-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+/* Efek Hover & Focus */
+.premium-select-wrapper:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+}
+.premium-select-wrapper:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Ikon Bintang di Kiri */
+.premium-icon-left {
+    position: absolute;
+    left: 14px;
+    font-size: 18px;
+    color: #f59e0b; /* Warna Emas */
+    pointer-events: none; /* Supaya klik tembus ke select */
+    z-index: 10;
+}
+
+/* Ikon Panah di Kanan (Custom) */
+.premium-arrow-right {
+    position: absolute;
+    right: 14px;
+    color: #64748b;
+    pointer-events: none;
+    font-size: 16px;
+    background: white; /* Tutup panah asli jika tembus */
+}
+
+/* Input Select Aslinya */
+.premium-select {
+    width: 100%;
+    appearance: none; /* HILANGKAN TAMPILAN BAWAAN BROWSER */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    background: transparent;
+    border: none;
+    padding: 12px 40px 12px 42px; /* Kiri 42px (buat bintang), Kanan 40px (buat panah) */
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    border-radius: 12px;
+    outline: none; /* Matikan outline biru standar */
+}
+
+/* Styling Pilihan di dalam (Browser punya batasan di sini, tapi kita rapikan) */
+.premium-select option {
+    color: #334155;
+    padding: 10px;
+    font-weight: 500;
+}
+
+/* --- PREMIUM CUSTOM DROPDOWN RATING --- */
+
+/* 1. Wadah Utama (Meniru style input-group-modern) */
+.rating-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    background: #f8fafc; /* Samakan dengan input lain */
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 15px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.rating-dropdown-trigger:hover {
+    border-color: #cbd5e1;
+    background: #fff;
+}
+
+/* Ikon Bintang Utama di Kiri (Gaya Mahal) */
+.rating-main-icon {
+    font-size: 18px;
+    margin-right: 12px;
+    color: transparent;
+    background: linear-gradient(135deg, #FDE68A, #F59E0B); /* Gradasi Emas */
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 1px 2px rgba(245, 158, 11, 0.3)); /* Sedikit timbul */
+}
+
+/* Teks yang terpilih */
+.selected-text {
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* 2. Daftar Pilihan (Dropdown List) */
+.rating-options-list {
+    position: absolute;
+    top: 100%; /* Muncul persis di bawahnya */
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
+    margin-top: 8px;
+    z-index: 50;
+    display: none; /* Tersembunyi defaultnya */
+    overflow: hidden;
+    animation: slideDown 0.2s ease-out;
+}
+
+/* Item Pilihan */
+.rating-option-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.rating-option-item:hover {
+    background: #f8fafc;
+}
+
+.rating-option-item:last-child {
+    border-bottom: none;
+}
+
+/* Gaya Bintang di dalam List (Lebih Mahal dari Emoji) */
+.premium-stars {
+    display: flex;
+    gap: 2px;
+}
+.premium-stars i {
+    font-size: 16px;
+    color: #F59E0B; /* Warna Emas Solid agar jelas */
+}
+.rating-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* Arrow Icon (Kanan) */
+.trigger-arrow { color: #94a3b8; transition: transform 0.3s; }
+.rating-dropdown-trigger.active .trigger-arrow { transform: rotate(180deg); }

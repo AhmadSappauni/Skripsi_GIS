@@ -45,4 +45,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function visitedPlaces()
+    {
+        return $this->belongsToMany(Wisata::class, 'user_wisata', 'user_id', 'wisata_id')->withTimestamps();
+    }
 }

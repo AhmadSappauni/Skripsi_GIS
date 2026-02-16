@@ -1,0 +1,345 @@
+/* Style Modal Konfirmasi */
+#custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Latar belakang gelap transparan */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    /* Efek blur estetik */
+}
+
+.cm-btn {
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    flex: 1;
+    transition: 0.2s;
+}
+
+.cm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cm-btn-cancel {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.cm-btn-confirm {
+    background: #ef4444;
+    color: white;
+}
+
+/* --- CSS TOOLTIP "!" --- */
+.label-with-tooltip {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    /* Jarak ke input di bawahnya */
+}
+
+.info-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1px solid #94a3b8;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 6px;
+    cursor: help;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.info-icon:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+    background: #eef2ff;
+}
+
+/* Kotak Penjelasan (Hidden by default) */
+.info-icon::after {
+    content: attr(data-tooltip);
+    /* Mengambil teks dari HTML */
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: 160px;
+    background: #1e293b;
+    color: white;
+    text-align: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+/* Panah Kecil di Bawah Kotak */
+.info-icon::before {
+    content: "";
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1e293b transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 100;
+}
+
+/* Efek Muncul saat Hover */
+.info-icon:hover::after,
+.info-icon:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* --- MODERN INPUT GROUP --- */
+.input-group-modern {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-modern i {
+    position: absolute;
+    left: 12px;
+    color: #64748b;
+    font-size: 14px;
+    z-index: 10;
+}
+
+.input-group-modern .form-input,
+.input-group-modern .form-select {
+    padding-left: 35px !important;
+    /* Memberi ruang untuk ikon */
+    transition: all 0.2s;
+}
+
+.input-group-modern .form-input:focus,
+.input-group-modern .form-select:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    background: white;
+}
+
+/* Section Title Kecil */
+.filter-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+/* --- DIRECTORY MODAL PREMIUM --- */
+.dir-action-bar {
+    padding: 15px 25px;
+    background: white;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+/* Search Bar Modern (Pill Shape) */
+.search-pill {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+    /* Bulat lonjong */
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.search-pill:focus-within {
+    background: white;
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.search-pill input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    color: #334155;
+}
+
+/* Tombol Filter Toggle */
+.btn-filter-toggle {
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 18px;
+}
+
+.btn-filter-toggle:hover,
+.btn-filter-toggle.active {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+/* Panel Filter Tersembunyi */
+.hidden-filter-panel {
+    max-height: 0;
+    overflow: hidden;
+    background: #f8fafc;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.hidden-filter-panel.show {
+    max-height: 200px;
+    /* Cukup untuk menampung dropdown */
+}
+
+.filter-grid {
+    padding: 20px 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+/* Kartu Wisata (Grid) */
+.dir-grid {
+    padding: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    background: #ffffff;
+}
+
+/* --- STYLE UNTUK KARTU DIREKTORI (YANG HILANG) --- */
+
+/* Container Grid */
+#directoryList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* Responsif */
+    gap: 20px;
+    padding: 25px;
+    background: #f8fafc;
+}
+
+/* Kartu Wisata */
+.dir-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.dir-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    border-color: #c7d2fe;
+}
+
+/* Pembungkus Gambar (Agar Ukuran Sama) */
+.dir-card-img-wrapper {
+    width: 100%;
+    height: 140px;
+    /* Tinggi fix agar rapi */
+    background: #f1f5f9;
+    position: relative;
+}
+
+.dir-card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Gambar tidak penyok */
+}
+
+/* Body Kartu */
+.dir-card-body {
+    padding: 12px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.dir-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dir-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.dir-cat {
+    background: #eef2ff;
+    color: #4f46e5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* Pesan Jika Kosong */
+.directory-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #94a3b8;
+    font-size: 14px;
+}
